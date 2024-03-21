@@ -54,7 +54,7 @@ env = sim.Environment(trace=True)
 OrderGenerator().activate()
 machines = [0 for _ in range(5)]
 for i in range(5):
-    machines[i] = Machine(speed=abs(sim.Uniform(2, 5).sample()))
+    machines[i] = Machine(speed=int(abs(sim.Uniform(0, 5).sample())))
     machines[i].activate()
 orderQueue = sim.Queue("orderQueue")
 
