@@ -4,9 +4,9 @@ import random
 import numpy as np
 
 class orderType(Enum):
-    TYPE1 = 1
-    TYPE2 = 2
-    TYPE3 = 3
+    HIGH_QUALITY = 1
+    MEDIUM_QUALITY = 2
+    LOW_QUALITY = 3
 
 class OrderGenerator(sim.Component):
     def process(self):
@@ -36,18 +36,31 @@ class Machine(sim.Component):
     def __init__(self, speed):
         super().__init__()
         self.order_count = 0
+        self.total_transition_time = 0
         self.speed = speed
+        self.last_order_type = None
+        self.transition_times = {
+            (orderType.HIGH_QUALITY, orderType.MEDIUM_QUALITY): 15,
+            (orderType.HIGH_QUALITY, orderType.LOW_QUALITY): 15,
+            (orderType.MEDIUM_QUALITY, orderType.HIGH_QUALITY): 30,
+            (orderType.MEDIUM_QUALITY, orderType.LOW_QUALITY): 15,
+            (orderType.LOW_QUALITY, orderType.HIGH_QUALITY): 40,
+            (orderType.LOW_QUALITY, orderType.MEDIUM_QUALITY): 30,
+        }
 
     def process(self):
         while True:
             while len(orderQueue) == 0:
                 self.passivate()
             self.customer = orderQueue.pop()
-            # if self.customer.processing_time > self.env.now():
-            #     self.hold(self.customer.processing_time - self.env.now())
+            if self.last_order_type:
+                transition_time = self.transition_times.get((self.last_order_type, self.customer.type), 0)
+                self.total_transition_time += transition_time
+                self.hold(transition_time)
             self.hold(np.ceil(self.customer.size / self.speed))
             self.customer.activate()
             self.order_count += 1
+            self.last_order_type = self.customer.type
 
 env = sim.Environment(trace=True)
 
@@ -62,6 +75,5 @@ env.run(till=500)
 print()
 orderQueue.print_statistics()
 
-# Print the number of orders processed by each machine
 for i, machine in enumerate(machines, start=1):
-    print(f"Machine {i} processed {machine.order_count} orders @ {machine.speed}")
+    print(f"Machine {i} processed {machine.order_count} orders @ {machine.speed}, waited {machine.total_transition_time} for transitions")
