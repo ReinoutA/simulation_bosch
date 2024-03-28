@@ -4,17 +4,16 @@ import random
 import numpy as np
 
 class orderType(Enum):
-    HIGH_QUALITY = 0
-    MEDIUM_QUALITY = 1
-    LOW_QUALITY = 2
+    HIGH_QUALITY = 1
+    MEDIUM_QUALITY = 2
+    LOW_QUALITY = 3
 
 class OrderGenerator(sim.Component):
     def process(self):
         print(env.now())
         order_types = list(orderType)
-        order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         while True:
-            random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
+            random_order_type = random.choice(order_types)
             Order(type=random_order_type, size=sim.Normal(50, 2).sample())
             self.hold(abs(sim.Normal(0.1, 1).sample()))
 
@@ -40,13 +39,12 @@ class Machine(sim.Component):
         self.total_transition_time = 0
         self.speed = speed
         self.last_order_type = None
-        self.order_types = [0, 0, 0]
         self.transition_times = {
-            (orderType.HIGH_QUALITY, orderType.MEDIUM_QUALITY): 5,
-            (orderType.HIGH_QUALITY, orderType.LOW_QUALITY): 5,
-            (orderType.MEDIUM_QUALITY, orderType.HIGH_QUALITY): 45,
+            (orderType.HIGH_QUALITY, orderType.MEDIUM_QUALITY): 15,
+            (orderType.HIGH_QUALITY, orderType.LOW_QUALITY): 15,
+            (orderType.MEDIUM_QUALITY, orderType.HIGH_QUALITY): 30,
             (orderType.MEDIUM_QUALITY, orderType.LOW_QUALITY): 15,
-            (orderType.LOW_QUALITY, orderType.HIGH_QUALITY): 90,
+            (orderType.LOW_QUALITY, orderType.HIGH_QUALITY): 40,
             (orderType.LOW_QUALITY, orderType.MEDIUM_QUALITY): 30,
         }
 
@@ -63,7 +61,6 @@ class Machine(sim.Component):
             self.customer.activate()
             self.order_count += 1
             self.last_order_type = self.customer.type
-            self.order_types[self.customer.type.value] += 1
 
 env = sim.Environment(trace=True)
 
@@ -79,4 +76,4 @@ print()
 orderQueue.print_statistics()
 
 for i, machine in enumerate(machines, start=1):
-    print(f"Machine {i} processed {machine.order_count} orders @ {machine.speed}, waited {machine.total_transition_time} for transitions, order types: {machine.order_types}")
+    print(f"Machine {i} processed {machine.order_count} orders @ {machine.speed}, waited {machine.total_transition_time} for transitions")
