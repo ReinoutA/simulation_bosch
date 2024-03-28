@@ -1,39 +1,78 @@
 import salabim as sim
+from enum import Enum
+import random
+import numpy as np
 
-class CustomerGenerator(sim.Component):
+class orderType(Enum):
+    HIGH_QUALITY = 0
+    MEDIUM_QUALITY = 1
+    LOW_QUALITY = 2
+
+class OrderGenerator(sim.Component):
     def process(self):
         print(env.now())
+        order_types = list(orderType)
+        order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         while True:
-            Customer()
-            self.hold(sim.Uniform(5, 15).sample())
+            random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
+            Order(type=random_order_type, size=sim.Normal(50, 2).sample())
+            self.hold(abs(sim.Normal(0.1, 1).sample()))
 
-
-class Customer(sim.Component):
+class Order(sim.Component):
+    def __init__(self, type, size):
+        super().__init__()  # Call the __init__ method of the parent class
+        self.type = type
+        self.size = size
     def process(self):
-        self.enter(waitingline)
-        if clerk.ispassive():
-            clerk.activate()
-        # Removed yield statement
+        self.enter(orderQueue)
+        
+        for machine in machines:
+            if machine.ispassive():
+                machine.activate()
         self.passivate()
+class Machine(sim.Component):
+    def __init__(self, speed):
+        super().__init__()
+        self.order_count = 0
+        self.total_transition_time = 0
+        self.speed = speed
+        self.last_order_type = None
+        self.order_types = [0, 0, 0]
+        self.transition_times = {
+            (orderType.HIGH_QUALITY, orderType.MEDIUM_QUALITY): 5,
+            (orderType.HIGH_QUALITY, orderType.LOW_QUALITY): 5,
+            (orderType.MEDIUM_QUALITY, orderType.HIGH_QUALITY): 45,
+            (orderType.MEDIUM_QUALITY, orderType.LOW_QUALITY): 15,
+            (orderType.LOW_QUALITY, orderType.HIGH_QUALITY): 90,
+            (orderType.LOW_QUALITY, orderType.MEDIUM_QUALITY): 30,
+        }
 
-
-class Clerk(sim.Component):
     def process(self):
         while True:
-            while len(waitingline) == 0:
-                # Removed yield statement
+            while len(orderQueue) == 0:
                 self.passivate()
-            self.customer = waitingline.pop()
-            self.hold(30)
+            self.customer = orderQueue.pop()
+            if self.last_order_type:
+                transition_time = self.transition_times.get((self.last_order_type, self.customer.type), 0)
+                self.total_transition_time += transition_time
+                self.hold(transition_time)
+            self.hold(np.ceil(self.customer.size / self.speed))
             self.customer.activate()
-
+            self.order_count += 1
+            self.last_order_type = self.customer.type
+            self.order_types[self.customer.type.value] += 1
 
 env = sim.Environment(trace=True)
 
-CustomerGenerator()
-clerk = Clerk()
-waitingline = sim.Queue("waitingline")
-
-env.run(till=50)
+OrderGenerator().activate()
+machines = [0 for _ in range(5)]
+for i in range(5):
+    machines[i] = Machine(speed=int(abs(sim.Uniform(0, 5).sample())))
+    machines[i].activate()
+orderQueue = sim.Queue("orderQueue")
+env.run(till=500)
 print()
-waitingline.print_statistics()
+orderQueue.print_statistics()
+
+for i, machine in enumerate(machines, start=1):
+    print(f"Machine {i} processed {machine.order_count} orders @ {machine.speed}, waited {machine.total_transition_time} for transitions, order types: {machine.order_types}")
