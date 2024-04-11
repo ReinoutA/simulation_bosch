@@ -34,7 +34,6 @@ for i in range(5):
     machines[i].activate()
 orderQueue = sim.Queue("orderQueue")
 env.run(till=500)
-print()
 orderQueue.print_statistics()
 
 for i, machine in enumerate(machines, start=1):
