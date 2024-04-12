@@ -21,12 +21,15 @@ ORDER_SIZE_STD = 50000
 ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
 
-methods = ["FCFS", "SJF", "HRRN"]
+methods = ["FCFS", "SJF", "HRRN", "PS"]
 
 class OrderType(Enum):
     HIGH_QUALITY = 0
     MEDIUM_QUALITY = 1
     LOW_QUALITY = 2
+
+# Priority list for PS
+PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY,]
 
 class Machine(sim.Component):
     num_machines = 1
@@ -78,6 +81,25 @@ class Machine(sim.Component):
                         if val >= worst_val:
                             worst_val = val
                             order = o
+                self.queue.remove(order)
+                
+            # PS
+            elif self.method == "PS":
+                orders = [None] * len(PRIORITY_LIST)
+                order = None
+                
+                for o in self.queue:
+                    if o.type in self.can_do_list:
+                        for i, o_type in enumerate(PRIORITY_LIST):
+                            if o.type == o_type:
+                                orders[i] = o
+                                break
+                
+                for elem in orders:
+                    if elem is not None:
+                        order = elem
+                        break
+                    
                 self.queue.remove(order)
                 
             if order is not None:
@@ -246,10 +268,9 @@ for method in methods:
 
 print("Started graphing...")
 
-csv = ["FCFS", "HRRN", "SJF"]
 dfs = []
 
-for name in csv:
+for name in methods:
     df = pd.read_csv(f"report_{name}.csv")
     df["Turnaround time"] = df["End time"] - df["Starting time"]
     df["Response ratio"] = df["Turnaround time"] / df["Execution time"]
@@ -257,8 +278,8 @@ for name in csv:
     df = df.reset_index(drop=True)
     dfs.append(df)
 
-for i in range(len(csv)):
-    name = csv[i]
+for i in range(len(methods)):
+    name = methods[i]
     df = dfs[i]
     x_values = np.linspace(0, 100, len(df)) 
     plt.plot(x_values, df["Response ratio"], label=name)
