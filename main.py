@@ -5,8 +5,17 @@ import csv
 import time
 
 TIME_LIMIT = 365
+
+# Logging parameters
 ENABLE_SIM_TRACE = True
 LOG_QUEUES = True
+
+# Generator parameters
+ORDER_SIZE_MEAN = 100000
+ORDER_SIZE_STD = 50000
+ORDER_INTERVAL_MEAN = 7
+ORDER_INTERVAL_STD = 1
+
 methods = ["FCFS", "SJF", "HRRN"]
 
 class OrderType(Enum):
@@ -125,9 +134,9 @@ class OrderGenerator(sim.Component):
         
         while env.now() < TIME_LIMIT:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
-            self.queue.add(Order(random_order_type, sim.Normal(100000, 50000).sample(), 0, 0, 1, self.method))
+            self.queue.add(Order(random_order_type, sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample(), 0, 0, 1, self.method))
             self.num_generated += 1
-            self.hold(abs(sim.Normal(7, 1).sample()))
+            self.hold(abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample()))
             
             for machine in machines:
                 if machine.status() == 'passive':
@@ -162,29 +171,29 @@ for method in methods:
 
     runtime = [
         {
-            OrderType.HIGH_QUALITY : 200000,
-            OrderType.MEDIUM_QUALITY : 200000,
-            OrderType.LOW_QUALITY : 200000,
+            OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 30,
+            OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 20,
+            OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 10,
         },
         {
-            OrderType.HIGH_QUALITY : 100000,
-            OrderType.MEDIUM_QUALITY : 200000,
-            OrderType.LOW_QUALITY : 500000,
+            OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 50,
+            OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 25,
+            OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 20,
         },
         {
-            OrderType.HIGH_QUALITY : 300000,
-            OrderType.MEDIUM_QUALITY : 300000,
-            OrderType.LOW_QUALITY : 400000,
+            OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 100,
+            OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 50,
+            OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 30,
         },
         {
-            OrderType.HIGH_QUALITY : 60000,
-            OrderType.MEDIUM_QUALITY : 280000,
-            OrderType.LOW_QUALITY : 1000000,
+            OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 10,
+            OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 5,
+            OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 5,
         },
         {
-            OrderType.HIGH_QUALITY : 300000,
-            OrderType.MEDIUM_QUALITY : 300000,
-            OrderType.LOW_QUALITY : 400000,
+            OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 35,
+            OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 20,
+            OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 15,
         },
     ]
 
