@@ -21,7 +21,7 @@ ORDER_SIZE_STD = 50000
 ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
 
-methods = ["FCFS", "SJF", "HRRN", "PS", "RR-2", "RR-5", "RR-7", "RR-14"]
+methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
 
 class OrderType(Enum):
     HIGH_QUALITY = 0
@@ -102,18 +102,10 @@ class Machine(sim.Component):
                 self.queue.remove(order)
                 
             # RR
-            elif "RR" in self.method:
+            elif "RR-" in self.method:
                 if len(self.queue) > 0:
                     order = self.queue[0]
-                    
-                if order is not None:
-                    execution_time = order.size / self.runtime_per_type[order.type]
-                    window = int(self.method.split("-")[1])
-                    if execution_time > window:
-                        left_over = int((execution_time - window) * self.runtime_per_type[order.type])
-                        order.size = left_over
-                    else:
-                        self.queue.remove(order)
+                    self.queue.remove(order)
                 
             if order is not None:
                 if order.type not in self.can_do_list:
@@ -135,6 +127,18 @@ class Machine(sim.Component):
                 order.end_time = env.now()
                 order.execution_time = execution_time
                 order.report()
+                
+                if "RR-" in self.method:
+                    window = int(self.method.split("-")[1])
+                    
+                    if execution_time > window:
+                        left_over = int((execution_time - window) * self.runtime_per_type[order.type])
+                        order.size = left_over
+                        self.queue.add(order)
+                        
+                        for machine in machines:
+                            if machine.status() != 'passive':
+                                machine.activate()
             
 class Order(sim.Component):
     counter = 0
