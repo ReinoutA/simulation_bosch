@@ -94,28 +94,6 @@ class OrderGenerator(sim.Component):
             for machine in machines:
                 if machine.status() == 'passive':
                     machine.activate()
-
-class Scheduler(sim.Component):
-    def __init__(self, input_queue, outputs, machines):
-        super().__init__()
-        self.input = input_queue
-        self.outputs = outputs
-        self.machines = machines
-    
-    def process(self):
-        i = 0
-        
-        while True:            
-            if len(self.input) <= 0:
-                self.passivate()
-            else:
-                i += 1
-                if i == len(self.outputs):
-                    i = 0
-                    
-                if self.machines[i].can_do(self.input.head()):
-                    self.outputs[i].add(self.input.pop())
-                    self.machines[i].activate()
    
 with open('report.csv', 'w') as file:
     writer = csv.writer(file)
@@ -183,18 +161,13 @@ for i in range(5):
 for machine in machines:
     queues.append(machine.queue)
 
-# scheduler = Scheduler(global_queue, queues, machines)
 OrderGenerator(global_queue).activate()
-# scheduler.activate()
 
 for machine in machines:
     if machine.status() != 'passive':
         machine.activate()
     
 env.run(till=365)
-
-# for queue in queues:
-#     queue.print_statistics()
 global_queue.print_statistics()
 
 for i, machine in enumerate(machines, start=1):
