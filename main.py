@@ -48,6 +48,7 @@ class Machine(sim.Component):
         self.can_do_list = can_do_list
         self.machines = machines
         self.method = method
+        self.total_execution_time = 0
         
     def process(self):
         while True:
@@ -123,6 +124,7 @@ class Machine(sim.Component):
                 self.last_order_type = order.type
                 self.total_profit += order.profit
                 execution_time = order.size / self.runtime_per_type[order.type]
+                self.total_execution_time += execution_time
                 self.hold(execution_time)
                 order.end_time = env.now()
                 order.execution_time = execution_time
@@ -273,7 +275,7 @@ for method in methods:
     max_len = 0
     if LOG_MACHINES:
         for i, machine in enumerate(machines, start=1):
-            string = f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions."
+            string = f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions, executed {machine.total_execution_time}."
             print(string)
             if len(string) > max_len:
                 max_len = len(string)
