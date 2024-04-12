@@ -2,13 +2,18 @@ import salabim as sim
 from enum import Enum
 import random
 import csv
-import time
+import time    
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 TIME_LIMIT = 365
 
 # Logging parameters
 ENABLE_SIM_TRACE = True
 LOG_QUEUES = True
+LOG_MACHINES = True
+LOG_GENERATOR = True
 
 # Generator parameters
 ORDER_SIZE_MEAN = 100000
@@ -227,12 +232,43 @@ for method in methods:
         global_queue.print_statistics()
 
     max_len = 0
-    for i, machine in enumerate(machines, start=1):
-        string = f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions."
-        print(string)
-        if len(string) > max_len:
-            max_len = len(string)
+    if LOG_MACHINES:
+        for i, machine in enumerate(machines, start=1):
+            string = f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions."
+            print(string)
+            if len(string) > max_len:
+                max_len = len(string)
             
     print("-" * max_len)
 
-    generator.report()
+    if LOG_GENERATOR:
+        generator.report()
+
+print("Started graphing...")
+
+csv = ["FCFS", "HRRN", "SJF"]
+dfs = []
+
+for name in csv:
+    df = pd.read_csv(f"report_{name}.csv")
+    df["Turnaround time"] = df["End time"] - df["Starting time"]
+    df["Response ratio"] = df["Turnaround time"] / df["Execution time"]
+    df = df.sort_values("Response ratio")
+    df = df.reset_index(drop=True)
+    dfs.append(df)
+
+for i in range(len(csv)):
+    name = csv[i]
+    df = dfs[i]
+    x_values = np.linspace(0, 100, len(df)) 
+    plt.plot(x_values, df["Response ratio"], label=name)
+    
+plt.xlim([0, 100])
+plt.title("Response ratio")
+
+plt.xlabel("% of orders")
+plt.ylabel("Response ratio")
+
+plt.legend()
+plt.grid()
+plt.savefig("response_ratio.png")
