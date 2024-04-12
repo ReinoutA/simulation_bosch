@@ -2,9 +2,12 @@ import salabim as sim
 from enum import Enum
 import random
 import csv
-import pandas as pd
+import time
 
 TIME_LIMIT = 365
+ENABLE_SIM_TRACE = True
+LOG_QUEUES = True
+methods = ["FCFS", "SJF", "HRRN"]
 
 class OrderType(Enum):
     HIGH_QUALITY = 0
@@ -14,7 +17,7 @@ class OrderType(Enum):
 class Machine(sim.Component):
     num_machines = 1
     
-    def __init__(self, transition_per_type_combination, runtime_per_type, can_do_list, global_queue, machines):
+    def __init__(self, transition_per_type_combination, runtime_per_type, can_do_list, global_queue, machines, method):
         super().__init__()
         self.id = Machine.num_machines
         Machine.num_machines += 1
@@ -27,6 +30,7 @@ class Machine(sim.Component):
         self.runtime_per_type = runtime_per_type
         self.can_do_list = can_do_list
         self.machines = machines
+        self.method = method
         
     def process(self):
         while True:
@@ -34,30 +38,33 @@ class Machine(sim.Component):
                 self.passivate()
                 
             # FCFS
-            # order = self.queue.pop()
+            if self.method == "FCFS":
+                order = self.queue.pop()
             
             # SJF
-            # order = None
-            # min_size = 1E30
-            # for o in self.queue:
-            #     if o.size < min_size and o.type in self.can_do_list:
-            #         min_size = o.size
-            #         order = o
-            # self.queue.remove(order)
+            elif self.method == "SJF":
+                order = None
+                min_size = 1E30
+                for o in self.queue:
+                    if o.size < min_size and o.type in self.can_do_list:
+                        min_size = o.size
+                        order = o
+                self.queue.remove(order)
                     
             # HRRN   
-            order = None
-            worst_val = 0
-            now = env.now()
-            
-            for o in self.queue:
-                if o.type in self.can_do_list:
-                    execution_time = o.size / self.runtime_per_type[o.type]
-                    val = o.get_response_ratio(now, execution_time)
-                    if val >= worst_val:
-                        worst_val = val
-                        order = o
-            self.queue.remove(order)
+            elif self.method == "HRRN":
+                order = None
+                worst_val = 0
+                now = env.now()
+                
+                for o in self.queue:
+                    if o.type in self.can_do_list:
+                        execution_time = o.size / self.runtime_per_type[o.type]
+                        val = o.get_response_ratio(now, execution_time)
+                        if val >= worst_val:
+                            worst_val = val
+                            order = o
+                self.queue.remove(order)
                 
             if order is not None:
                 if order.type not in self.can_do_list:
@@ -83,7 +90,7 @@ class Machine(sim.Component):
 class Order(sim.Component):
     counter = 0
     
-    def __init__(self, type, size, deadline, received_date, profit):
+    def __init__(self, type, size, deadline, received_date, profit, method):
         super().__init__()
         self.identifier = Order.counter
         Order.counter += 1
@@ -95,9 +102,10 @@ class Order(sim.Component):
         self.start_time = env.now()
         self.end_time = None
         self.execution_time = None
+        self.method = method
         
     def report(self):
-        with open("report.csv", "a", newline = "") as file:
+        with open(f"report_{self.method}.csv", "a", newline = "") as file:
             writer = csv.writer(file)
             writer.writerow([self.identifier, self.start_time, self.end_time, self.execution_time])
             
@@ -105,10 +113,11 @@ class Order(sim.Component):
         return (now - self.start_time) / execution_time
        
 class OrderGenerator(sim.Component):
-    def __init__(self, queue):
+    def __init__(self, queue, method):
         super().__init__()
         self.queue = queue
         self.num_generated = 0
+        self.method = method
         
     def process(self):
         order_types = list(OrderType)
@@ -116,9 +125,9 @@ class OrderGenerator(sim.Component):
         
         while env.now() < TIME_LIMIT:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
-            self.queue.add(Order(random_order_type, sim.Normal(100000, 50000).sample(), 0, 0, 1))
+            self.queue.add(Order(random_order_type, sim.Normal(100000, 50000).sample(), 0, 0, 1, self.method))
             self.num_generated += 1
-            self.hold(abs(sim.Normal(3, 1).sample()))
+            self.hold(abs(sim.Normal(7, 1).sample()))
             
             for machine in machines:
                 if machine.status() == 'passive':
@@ -127,83 +136,94 @@ class OrderGenerator(sim.Component):
     def report(self):
         print(f"Generated {self.num_generated} orders")
    
-with open('report.csv', 'w') as file:
-    writer = csv.writer(file)
-    writer.writerow(["Order", "Starting time", "End time", "Execution time"])
-          
-env = sim.Environment(trace=True)
 
-queues = []
+for method in methods:
+    print(method) 
+    with open(f"report_{method}.csv", "w") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Order", "Starting time", "End time", "Execution time"])
+        
+    env = sim.Environment(trace=ENABLE_SIM_TRACE)
+    env.random_seed(int(time.time()))
 
-transitions = {
-    (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-    (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-    (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
-    (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-    (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-    (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
-    (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-    (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-    (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-}
+    queues = []
 
-runtime = [
-    {
-        OrderType.HIGH_QUALITY : 200000,
-        OrderType.MEDIUM_QUALITY : 200000,
-        OrderType.LOW_QUALITY : 200000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 100000,
-        OrderType.MEDIUM_QUALITY : 200000,
-        OrderType.LOW_QUALITY : 500000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 300000,
-        OrderType.MEDIUM_QUALITY : 300000,
-        OrderType.LOW_QUALITY : 400000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 60000,
-        OrderType.MEDIUM_QUALITY : 280000,
-        OrderType.LOW_QUALITY : 1000000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 300000,
-        OrderType.MEDIUM_QUALITY : 300000,
-        OrderType.LOW_QUALITY : 400000,
-    },
-]
+    transitions = {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    }
 
-can_do_lists = [
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-]
+    runtime = [
+        {
+            OrderType.HIGH_QUALITY : 200000,
+            OrderType.MEDIUM_QUALITY : 200000,
+            OrderType.LOW_QUALITY : 200000,
+        },
+        {
+            OrderType.HIGH_QUALITY : 100000,
+            OrderType.MEDIUM_QUALITY : 200000,
+            OrderType.LOW_QUALITY : 500000,
+        },
+        {
+            OrderType.HIGH_QUALITY : 300000,
+            OrderType.MEDIUM_QUALITY : 300000,
+            OrderType.LOW_QUALITY : 400000,
+        },
+        {
+            OrderType.HIGH_QUALITY : 60000,
+            OrderType.MEDIUM_QUALITY : 280000,
+            OrderType.LOW_QUALITY : 1000000,
+        },
+        {
+            OrderType.HIGH_QUALITY : 300000,
+            OrderType.MEDIUM_QUALITY : 300000,
+            OrderType.LOW_QUALITY : 400000,
+        },
+    ]
 
-global_queue = sim.Queue("Global queue")
+    can_do_lists = [
+        [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+        [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+        [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+        [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+        [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    ]
 
-machines = []
-for i in range(5):
-    machine = Machine(transitions, runtime[i], can_do_lists[i], global_queue, machines)
-    machines.append(machine)
+    global_queue = sim.Queue("Global queue")
 
-for machine in machines:
-    queues.append(machine.queue)
+    machines = []
+    for i in range(5):
+        machine = Machine(transitions, runtime[i], can_do_lists[i], global_queue, machines, method)
+        machines.append(machine)
 
-generator = OrderGenerator(global_queue)
-generator.activate()
+    for machine in machines:
+        queues.append(machine.queue)
 
-for machine in machines:
-    if machine.status() != 'passive':
-        machine.activate()
-    
-env.run()
-global_queue.print_statistics()
+    generator = OrderGenerator(global_queue, method)
+    generator.activate()
 
-for i, machine in enumerate(machines, start=1):
-    print(f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions.")
+    for machine in machines:
+        if machine.status() != 'passive':
+            machine.activate()
+        
+    env.run()
+    if LOG_QUEUES:
+        global_queue.print_statistics()
 
-generator.report()
+    max_len = 0
+    for i, machine in enumerate(machines, start=1):
+        string = f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions."
+        print(string)
+        if len(string) > max_len:
+            max_len = len(string)
+            
+    print("-" * max_len)
+
+    generator.report()
