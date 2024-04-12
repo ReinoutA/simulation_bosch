@@ -21,14 +21,14 @@ ORDER_SIZE_STD = 50000
 ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
 
-methods = ["FCFS", "SJF", "HRRN", "PS"]
+methods = ["FCFS", "SJF", "HRRN", "PS", "RR-2", "RR-5", "RR-7", "RR-14"]
 
 class OrderType(Enum):
     HIGH_QUALITY = 0
     MEDIUM_QUALITY = 1
     LOW_QUALITY = 2
 
-# Priority list for PS
+# Priority list for Priority Scheduling
 PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY,]
 
 class Machine(sim.Component):
@@ -54,13 +54,14 @@ class Machine(sim.Component):
             if len(self.queue) == 0:
                 self.passivate()
                 
+            order = None
+            
             # FCFS
             if self.method == "FCFS":
                 order = self.queue.pop()
             
             # SJF
             elif self.method == "SJF":
-                order = None
                 min_size = 1E30
                 for o in self.queue:
                     if o.size < min_size and o.type in self.can_do_list:
@@ -70,7 +71,6 @@ class Machine(sim.Component):
                     
             # HRRN   
             elif self.method == "HRRN":
-                order = None
                 worst_val = 0
                 now = env.now()
                 
@@ -86,7 +86,6 @@ class Machine(sim.Component):
             # PS
             elif self.method == "PS":
                 orders = [None] * len(PRIORITY_LIST)
-                order = None
                 
                 for o in self.queue:
                     if o.type in self.can_do_list:
@@ -101,6 +100,20 @@ class Machine(sim.Component):
                         break
                     
                 self.queue.remove(order)
+                
+            # RR
+            elif "RR" in self.method:
+                if len(self.queue) > 0:
+                    order = self.queue[0]
+                    
+                if order is not None:
+                    execution_time = order.size / self.runtime_per_type[order.type]
+                    window = int(self.method.split("-")[1])
+                    if execution_time > window:
+                        left_over = int((execution_time - window) * self.runtime_per_type[order.type])
+                        order.size = left_over
+                    else:
+                        self.queue.remove(order)
                 
             if order is not None:
                 if order.type not in self.can_do_list:
