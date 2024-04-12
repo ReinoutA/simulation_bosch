@@ -4,6 +4,8 @@ import random
 import csv
 import pandas as pd
 
+TIME_LIMIT = 365
+
 class OrderType(Enum):
     HIGH_QUALITY = 0
     MEDIUM_QUALITY = 1
@@ -35,16 +37,27 @@ class Machine(sim.Component):
             # order = self.queue.pop()
             
             # SJF
-            order = None
-            min_size = 1E30
-            for o in self.queue:
-                print(f"o.size = {o.size} <? min_size {min_size} and o.type in self.can_do_list? -> {o.size < min_size and o.type in self.can_do_list}")
-                if o.size < min_size and o.type in self.can_do_list:
-                    min_size = o.size
-                    order = o
-                    print(f"New min_size = {min_size}, smallest order = {order}")
-            self.queue.remove(order)
+            # order = None
+            # min_size = 1E30
+            # for o in self.queue:
+            #     if o.size < min_size and o.type in self.can_do_list:
+            #         min_size = o.size
+            #         order = o
+            # self.queue.remove(order)
                     
+            # HRRN   
+            order = None
+            worst_val = 0
+            now = env.now()
+            
+            for o in self.queue:
+                if o.type in self.can_do_list:
+                    execution_time = o.size / self.runtime_per_type[o.type]
+                    val = o.get_response_ratio(now, execution_time)
+                    if val >= worst_val:
+                        worst_val = val
+                        order = o
+            self.queue.remove(order)
                 
             if order is not None:
                 if order.type not in self.can_do_list:
@@ -87,6 +100,9 @@ class Order(sim.Component):
         with open("report.csv", "a", newline = "") as file:
             writer = csv.writer(file)
             writer.writerow([self.identifier, self.start_time, self.end_time, self.execution_time])
+            
+    def get_response_ratio(self, now, execution_time):
+        return (now - self.start_time) / execution_time
        
 class OrderGenerator(sim.Component):
     def __init__(self, queue):
@@ -98,11 +114,11 @@ class OrderGenerator(sim.Component):
         order_types = list(OrderType)
         order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         
-        while env.now() < TIME_LIMIT and len(self.queue) <= 100:
+        while env.now() < TIME_LIMIT:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
             self.queue.add(Order(random_order_type, sim.Normal(100000, 50000).sample(), 0, 0, 1))
             self.num_generated += 1
-            self.hold(abs(sim.Normal(7, 1).sample()))
+            self.hold(abs(sim.Normal(3, 1).sample()))
             
             for machine in machines:
                 if machine.status() == 'passive':
@@ -110,8 +126,6 @@ class OrderGenerator(sim.Component):
         
     def report(self):
         print(f"Generated {self.num_generated} orders")
-   
-TIME_LIMIT = 365
    
 with open('report.csv', 'w') as file:
     writer = csv.writer(file)
