@@ -31,7 +31,20 @@ class Machine(sim.Component):
             if len(self.queue) == 0:
                 self.passivate()
                 
-            order = self.queue.pop()
+            # FCFS
+            # order = self.queue.pop()
+            
+            # SJF
+            order = None
+            min_size = 1E30
+            for o in self.queue:
+                print(f"o.size = {o.size} <? min_size {min_size} and o.type in self.can_do_list? -> {o.size < min_size and o.type in self.can_do_list}")
+                if o.size < min_size and o.type in self.can_do_list:
+                    min_size = o.size
+                    order = o
+                    print(f"New min_size = {min_size}, smallest order = {order}")
+            self.queue.remove(order)
+                    
                 
             if order is not None:
                 if order.type not in self.can_do_list:
@@ -53,8 +66,6 @@ class Machine(sim.Component):
                 order.end_time = env.now()
                 order.execution_time = execution_time
                 order.report()
-            else:
-                print("PANIC!")
             
 class Order(sim.Component):
     counter = 0
@@ -81,19 +92,26 @@ class OrderGenerator(sim.Component):
     def __init__(self, queue):
         super().__init__()
         self.queue = queue
+        self.num_generated = 0
         
     def process(self):
         order_types = list(OrderType)
         order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         
-        while True:
+        while env.now() < TIME_LIMIT and len(self.queue) <= 100:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
             self.queue.add(Order(random_order_type, sim.Normal(100000, 50000).sample(), 0, 0, 1))
-            self.hold(abs(sim.Normal(4, 1).sample()))
+            self.num_generated += 1
+            self.hold(abs(sim.Normal(7, 1).sample()))
             
             for machine in machines:
                 if machine.status() == 'passive':
                     machine.activate()
+        
+    def report(self):
+        print(f"Generated {self.num_generated} orders")
+   
+TIME_LIMIT = 365
    
 with open('report.csv', 'w') as file:
     writer = csv.writer(file)
@@ -161,14 +179,17 @@ for i in range(5):
 for machine in machines:
     queues.append(machine.queue)
 
-OrderGenerator(global_queue).activate()
+generator = OrderGenerator(global_queue)
+generator.activate()
 
 for machine in machines:
     if machine.status() != 'passive':
         machine.activate()
     
-env.run(till=365)
+env.run()
 global_queue.print_statistics()
 
 for i, machine in enumerate(machines, start=1):
     print(f"Machine {i} made {machine.total_profit} profit, waited {machine.total_transition_time} on transitions.")
+
+generator.report()
