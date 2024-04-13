@@ -6,6 +6,11 @@ import time
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import tkinter as tk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
+import threading
 
 TIME_LIMIT = 365
 
@@ -21,7 +26,11 @@ ORDER_SIZE_STD = 50000
 ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
 
+# GUI parameters
+REFRESH_RATE = 100
+
 methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
+# methods = ["FCFS"]
 
 class OrderType(Enum):
     HIGH_QUALITY = 0
@@ -34,7 +43,7 @@ PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW
 class Machine(sim.Component):
     num_machines = 1
     
-    def __init__(self, transition_per_type_combination, runtime_per_type, can_do_list, global_queue, machines, method):
+    def __init__(self, transition_per_type_combination, runtime_per_type, can_do_list, global_queue, machines, method, env):
         super().__init__()
         self.id = Machine.num_machines
         Machine.num_machines += 1
@@ -49,6 +58,7 @@ class Machine(sim.Component):
         self.machines = machines
         self.method = method
         self.total_execution_time = 0
+        self.env = env
         
     def process(self):
         while True:
@@ -73,7 +83,7 @@ class Machine(sim.Component):
             # HRRN   
             elif self.method == "HRRN":
                 worst_val = 0
-                now = env.now()
+                now = self.env.now()
                 
                 for o in self.queue:
                     if o.type in self.can_do_list:
@@ -111,7 +121,7 @@ class Machine(sim.Component):
             if order is not None:
                 if order.type not in self.can_do_list:
                     self.queue.add(order)
-                    for machine in machines:
+                    for machine in self.machines:
                         if machine.status() != 'passive':
                             machine.activate()
                     self.passivate()
@@ -126,7 +136,7 @@ class Machine(sim.Component):
                 execution_time = order.size / self.runtime_per_type[order.type]
                 self.total_execution_time += execution_time
                 self.hold(execution_time)
-                order.end_time = env.now()
+                order.end_time = self.env.now()
                 order.execution_time = execution_time
                 order.report()
                 
@@ -138,14 +148,14 @@ class Machine(sim.Component):
                         order.size = left_over
                         self.queue.add(order)
                         
-                        for machine in machines:
+                        for machine in self.machines:
                             if machine.status() != 'passive':
                                 machine.activate()
             
 class Order(sim.Component):
     counter = 0
     
-    def __init__(self, type, size, deadline, received_date, profit, method):
+    def __init__(self, type, size, deadline, received_date, profit, method, env):
         super().__init__()
         self.identifier = Order.counter
         Order.counter += 1
@@ -160,43 +170,128 @@ class Order(sim.Component):
         self.method = method
         
     def report(self):
-        with open(f"report_{self.method}.csv", "a", newline = "") as file:
-            writer = csv.writer(file)
-            writer.writerow([self.identifier, self.start_time, self.end_time, self.execution_time])
+        active_report.report(self)
+        # with open(f"report_{self.method}.csv", "a", newline = "") as file:
+        #     writer = csv.writer(file)
+        #     writer.writerow([self.identifier, self.start_time, self.end_time, self.execution_time])
             
     def get_response_ratio(self, now, execution_time):
         return (now - self.start_time) / execution_time
        
 class OrderGenerator(sim.Component):
-    def __init__(self, queue, method):
+    def __init__(self, queue, method, machines, env):
         super().__init__()
         self.queue = queue
         self.num_generated = 0
         self.method = method
+        self.machines = machines
+        self.env = env
         
     def process(self):
         order_types = list(OrderType)
         order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         
-        while env.now() < TIME_LIMIT:
+        while gui_running:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
-            self.queue.add(Order(random_order_type, sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample(), 0, 0, 1, self.method))
+            self.queue.add(Order(random_order_type, sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample(), 0, 0, 1, self.method, self.env))
             self.num_generated += 1
             self.hold(abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample()))
             
-            for machine in machines:
+            for machine in self.machines:
                 if machine.status() == 'passive':
                     machine.activate()
         
+        # self.env.exit()
+        
     def report(self):
         print(f"Generated {self.num_generated} orders")
-   
 
-for method in methods:
-    print(method) 
-    with open(f"report_{method}.csv", "w") as file:
-        writer = csv.writer(file)
-        writer.writerow(["Order", "Starting time", "End time", "Execution time"])
+class DataReport:
+    def __init__(self):
+       self.df = pd.DataFrame(columns=["Order", "Starting time", "End time", "Execution time"])
+       self.mutex = threading.Lock()
+       
+    def report(self, order):
+        self.mutex.acquire()
+        new_row = {"Order": order.identifier,
+                   "Starting time": order.start_time,
+                   "End time": order.end_time,
+                   "Execution time": order.execution_time}
+        
+        self.df.loc[len(self.df)] = new_row
+        self.mutex.release()
+        
+    def draw(self, name, ax):
+        self.mutex.acquire()
+        self.df["Turnaround time"] = self.df["End time"] - self.df["Starting time"]
+        self.df["Response ratio"] = self.df["Turnaround time"] / self.df["Execution time"]
+        self.df = self.df.sort_values("Response ratio")
+        self.df = self.df.reset_index(drop=True)
+        x_values = np.linspace(0, 100, len(self.df)) 
+        ax.plot(x_values, self.df["Response ratio"], label=name)
+        self.mutex.release()
+        
+    def print(self):
+        self.mutex.acquire()
+        print(self.df)
+        self.mutex.release()
+
+global active_report
+
+reports = []
+for i in range(len(methods)):
+    reports.append(DataReport())
+
+def draw_plot(ax, canvas, root):
+    ax.clear()
+    for i in range(len(methods)):
+        name = methods[i]
+        reports[i].draw(name, ax)
+
+    ax.set_xlim([0, 100])
+    ax.set_title("Response ratio")
+
+    ax.set_xlabel("% of orders")
+    ax.set_ylabel("Response ratio")
+
+    ax.legend()
+    ax.grid()
+    ax.figure.savefig("response_ratio.png")
+    canvas.draw()
+    root.after(REFRESH_RATE, lambda: draw_plot(ax, canvas, root)) 
+
+def run_gui():
+    global gui_running
+
+    root = tk.Tk()
+    gui_running = True
+    fig = Figure(figsize=(5, 5))
+    ax = fig.add_subplot(111)
+
+    for i in range(len(methods)):
+        name = methods[i]
+        reports[i].draw(name, ax)
+
+    ax.set_xlim([0, 100])
+    ax.set_title("Response ratio")
+
+    ax.set_xlabel("% of orders")
+    ax.set_ylabel("Response ratio")
+
+    ax.legend()
+    ax.grid()
+    # ax.savefig("response_ratio.png")
+
+    canvas = FigureCanvasTkAgg(fig, master=root)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
+
+    root.after(REFRESH_RATE, lambda: draw_plot(ax, canvas, root)) 
+    root.mainloop()
+    gui_running = False
+
+def run_simulation(index):
+    global gui_running
         
     env = sim.Environment(trace=ENABLE_SIM_TRACE)
     env.random_seed(int(time.time()))
@@ -255,13 +350,13 @@ for method in methods:
 
     machines = []
     for i in range(5):
-        machine = Machine(transitions, runtime[i], can_do_lists[i], global_queue, machines, method)
+        machine = Machine(transitions, runtime[i], can_do_lists[i], global_queue, machines, methods[index], env)
         machines.append(machine)
 
     for machine in machines:
         queues.append(machine.queue)
 
-    generator = OrderGenerator(global_queue, method)
+    generator = OrderGenerator(global_queue, methods[index], machines, env)
     generator.activate()
 
     for machine in machines:
@@ -269,6 +364,7 @@ for method in methods:
             machine.activate()
         
     env.run()
+
     if LOG_QUEUES:
         global_queue.print_statistics()
 
@@ -285,30 +381,26 @@ for method in methods:
     if LOG_GENERATOR:
         generator.report()
 
-print("Started graphing...")
+global gui_running
+gui_running = True
 
-dfs = []
+gui_thread = threading.Thread(target=run_gui)
+gui_thread.start()
 
-for name in methods:
-    df = pd.read_csv(f"report_{name}.csv")
-    df["Turnaround time"] = df["End time"] - df["Starting time"]
-    df["Response ratio"] = df["Turnaround time"] / df["Execution time"]
-    df = df.sort_values("Response ratio")
-    df = df.reset_index(drop=True)
-    dfs.append(df)
+simulation_threads = []
 
 for i in range(len(methods)):
-    name = methods[i]
-    df = dfs[i]
-    x_values = np.linspace(0, 100, len(df)) 
-    plt.plot(x_values, df["Response ratio"], label=name)
-    
-plt.xlim([0, 100])
-plt.title("Response ratio")
+    simulation_thread = threading.Thread(target=run_simulation, args=(i,))
+    simulation_thread.start()
+    simulation_threads.append(simulation_thread)
 
-plt.xlabel("% of orders")
-plt.ylabel("Response ratio")
+    active_report = reports[i]
+    active_report.print()
 
-plt.legend()
-plt.grid()
-plt.savefig("response_ratio.png")
+    while gui_running:
+        time.sleep(1)
+
+for simulation_thread in simulation_threads:
+    simulation_thread.join()
+
+gui_thread.join()

@@ -1,38 +1,28 @@
 import tkinter as tk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
 
-NUM_MACHINES = 5
-
-def on_button_click():
-    label.config(text="Button clicked!")
-
+# Create the main window
 root = tk.Tk()
 
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+# Create a Figure object
+fig = Figure(figsize=(5, 5))
 
-root.geometry(f'{screen_width}x{screen_height}')
+# Create an Axes object
+ax = fig.add_subplot(111)
 
-canvas = tk.Canvas(root, width=screen_width, height=screen_height)
-canvas.pack()
+# Generate some example data
+x = np.linspace(0, 2*np.pi, 400)
+y = np.sin(x**2)
 
-# Calculate the center of the screen
-center_x = screen_width // 2
-center_y = screen_height // 2
+# Plot the data
+ax.plot(x, y)
 
-# Draw 5 rectangles (boxes) on the canvas
-for i in range(NUM_MACHINES):
-    top_left_x = center_x - 25  # 25 is half the width of the rectangle
-    top_left_y = center_y - 50 * 2 + ((i - NUM_MACHINES // 2) * 100)  # Position the rectangles on top of each other
-    bottom_right_x = top_left_x + 100
-    bottom_right_y = top_left_y + 50
-    canvas.create_rectangle(top_left_x, top_left_y, bottom_right_x, bottom_right_y, fill="gray")
+# Create a canvas for the plot and add it to the main window
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.draw()
+canvas.get_tk_widget().pack()
 
-canvas.create_rectangle(50, 50, 400, screen_height - 100, fill="lightblue")
-
-button = tk.Button(root, text="Simulate", command=on_button_click)
-button.pack()
-
-label = tk.Label(root, text="")
-label.pack()
-
+# Start the Tkinter main loop
 root.mainloop()
