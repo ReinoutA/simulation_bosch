@@ -15,12 +15,12 @@ ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
 
 # GUI parameters
-REFRESH_RATE = 10
+REFRESH_RATE = 100
 # WINDOW_WIDTH = 800
 # WINDOW_HEIGHT = 800
 
-# methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
-methods = ["FCFS"]
+methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
+# methods = ["FCFS", "SJF"]
 
 # Priority list for Priority Scheduling
 PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY,]

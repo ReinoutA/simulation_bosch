@@ -44,6 +44,8 @@ class DataReport:
             else:
                 ax.plot(x_values, self.df["Response ratio"], label=name)
 
+            ax.set_yscale('log')
+            
         self.mutex.release()
         
     def print(self):

@@ -1,28 +1,48 @@
 import tkinter as tk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import numpy as np
+from matplotlib import rcParams
+import logging
+from threading import Thread
+from Config import *
+import Config
 
-# Create the main window
-root = tk.Tk()
+class Gui(Thread):
+    def __init__(self, reports):
+        super().__init__()
+        self.reports = reports
+        
+    def run(self):
+        root = tk.Tk()
+        fig = Figure(figsize=(5, 5))
+        ax = fig.add_subplot(111)
 
-# Create a Figure object
-fig = Figure(figsize=(5, 5))
+        canvas = FigureCanvasTkAgg(fig, master=root)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
 
-# Create an Axes object
-ax = fig.add_subplot(111)
+        root.after(REFRESH_RATE, lambda: self.draw_plot(ax, canvas, root)) 
+        root.mainloop()
+        Config.gui_running = False
+        
+    def draw_plot(self, ax, canvas, root):
+        ax.clear()
+        
+        for i in range(len(methods)):
+            name = methods[i]
+            if i < len(self.reports):
+                logging.info(f"Calling draw for {i}")
+                self.reports[i].draw(name, ax, None)
+            else:
+                logging.error("Index out of range")
 
-# Generate some example data
-x = np.linspace(0, 2*np.pi, 400)
-y = np.sin(x**2)
+        ax.set_xlim([0, 100])
+        ax.set_title("Response ratio")
 
-# Plot the data
-ax.plot(x, y)
+        ax.set_xlabel("% of orders")
+        ax.set_ylabel("Response ratio")
 
-# Create a canvas for the plot and add it to the main window
-canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.draw()
-canvas.get_tk_widget().pack()
-
-# Start the Tkinter main loop
-root.mainloop()
+        ax.legend()
+        ax.grid()
+        canvas.draw()
+        root.after(REFRESH_RATE, lambda: self.draw_plot(ax, canvas, root)) 
