@@ -6,6 +6,7 @@ import numpy as np
 import tkinter as tk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib import rcParams
 import numpy as np
 import threading
 import logging
@@ -22,9 +23,17 @@ from DataReport import DataReport
 
 def draw_plot(ax, canvas, root):
     ax.clear()
-    for i in range(len(methods)):
-        name = methods[i]
-        reports[i].draw(name, ax)
+    
+    color_cycle = rcParams['axes.prop_cycle'].by_key()['color']
+    
+    if len(reports) == len(methods):
+        for i, color in zip(range(len(methods)), color_cycle):
+            name = methods[i]
+            if i < len(reports):
+                logging.info(f"Calling draw for {i}")
+                reports[i].draw(name, ax, None)
+            else:
+                logging.error("Index out of range")
 
     ax.set_xlim([0, 100])
     ax.set_title("Response ratio")
@@ -43,9 +52,16 @@ def run_gui():
     fig = Figure(figsize=(5, 5))
     ax = fig.add_subplot(111)
 
-    for i in range(len(methods)):
-        name = methods[i]
-        reports[i].draw(name, ax)
+    color_cycle = rcParams['axes.prop_cycle'].by_key()['color']
+    
+    if len(reports) == len(methods):
+        for i, color in zip(range(len(methods)), color_cycle):
+            name = methods[i]
+            if i < len(reports):
+                logging.info(f"Calling draw for {i}")
+                reports[i].draw(name, ax, None)
+            else:
+                logging.error("Index out of range")
 
     ax.set_xlim([0, 100])
     ax.set_title("Response ratio")
@@ -120,9 +136,10 @@ global reports
 reports = []
 Config.gui_running = True
 
+simulation_thread = threading.Thread(target=run_simulation, args=())
+simulation_thread.start()
+
 gui_thread = threading.Thread(target=run_gui)
 gui_thread.start()
 
 # simulation = Simulation(index)
-simulation_thread = threading.Thread(target=run_simulation, args=())
-simulation_thread.start()

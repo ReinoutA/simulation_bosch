@@ -18,17 +18,18 @@ class DataReport:
                    "Execution time": order.execution_time}
         
         self.df.loc[len(self.df)] = new_row
-        logging.info(f"Printing DataFrame {self.name}")
-        logging.info(self.df)
+        logging.info(f"Appending DataFrame {self.name}")
         self.mutex.release()
         
     def draw(self, name, ax, color):
         if not gui_running:
+            logging.error(f"Gui running is False")
             return
         
         self.mutex.acquire()
 
         if self.df.empty:
+            logging.info(f"Empty DataFrame when drawing {self.name}")
             logging.error(f"Empty DataFrame when drawing {self.name}")
         else:
             self.df["Turnaround time"] = self.df["End time"] - self.df["Starting time"]
@@ -51,5 +52,4 @@ class DataReport:
             logging.error(f"Empty DataFrame when printing {self.name}")
         else:
             logging.info(f"Printing DataFrame {self.name}")
-            logging.info(self.df)
         self.mutex.release()

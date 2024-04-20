@@ -3,7 +3,7 @@ from OrderType import OrderType
 TIME_LIMIT = 365
 
 # Logging parameters
-ENABLE_SIM_TRACE = True
+ENABLE_SIM_TRACE = False
 LOG_QUEUES = True
 LOG_MACHINES = True
 LOG_GENERATOR = True
@@ -74,4 +74,4 @@ can_do_lists = [
 ]
 
 global gui_running
-gui_running = False
+gui_running = True
