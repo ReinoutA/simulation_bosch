@@ -14,7 +14,7 @@ class Order(sim.Component):
         self.profit = profit
         self.start_time = env.now()
         self.end_time = None
-        self.execution_time = None
+        self.execution_time = 0
         self.method = method
         self.report = report
         

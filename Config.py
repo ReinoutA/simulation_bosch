@@ -1,12 +1,13 @@
 from OrderType import OrderType
+from Method import *
 
 TIME_LIMIT = 365
 
 # Logging parameters
 ENABLE_SIM_TRACE = False
-LOG_QUEUES = True
-LOG_MACHINES = True
-LOG_GENERATOR = True
+LOG_QUEUES = False
+LOG_MACHINES = False
+LOG_GENERATOR = False
 
 # Generator parameters
 ORDER_SIZE_MEAN = 100000
@@ -16,11 +17,9 @@ ORDER_INTERVAL_STD = 1
 
 # GUI parameters
 REFRESH_RATE = 100
-# WINDOW_WIDTH = 800
-# WINDOW_HEIGHT = 800
 
-methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
-# methods = ["FCFS", "SJF"]
+# methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
+methods = [FCFS(), SJF(), HRRN(), PS(), RR(7), RR(14), RR(28)]
 
 # Priority list for Priority Scheduling
 PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY,]

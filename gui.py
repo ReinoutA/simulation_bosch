@@ -29,10 +29,9 @@ class Gui(Thread):
         ax.clear()
         
         for i in range(len(methods)):
-            name = methods[i]
             if i < len(self.reports):
                 logging.info(f"Calling draw for {i}")
-                self.reports[i].draw(name, ax, None)
+                self.reports[i].draw(methods[i].name, ax, None)
             else:
                 logging.error("Index out of range")
 
