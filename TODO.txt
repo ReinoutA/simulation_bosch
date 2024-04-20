@@ -1,0 +1,17 @@
+Order:
+-	Wanneer gekregen?
+-	Tegen wanneer
+Laat simulatie starten op 1 januari
+
+Verschillende scheduling algoritmes:
+-	Verschillende priorityqueue evaluatiefuncties
+-	Sliders voor de gewichten van elk van de gewichten in een evaluatiefunctie: vooraleer je de simulatie start, niet tijdens dat het loopt
+
+Elementen die in de evaluatiefunctie kan zitten:
+-	Lateness
+-	Tardiness
+-	Grootte van de order : alle ruitenwissers binnen een order hebben zelfde type, en zoniet splitsen we ze op in meerdere orders
+-	Voorrang als er momenteel al een ruitenwisser van dat type bezig is (omschakeltijden worden zo misschien gereduceerd)
+
+
+Hoe omschakeltijd er in verwerken?
