@@ -3,7 +3,7 @@ import salabim as sim
 class Order(sim.Component):
     counter = 0
     
-    def __init__(self, type, size, deadline, received_date, profit, method, env, report):
+    def __init__(self, type, size, deadline, received_date, profit, env, report):
         super().__init__()
         self.identifier = Order.counter
         Order.counter += 1
@@ -15,7 +15,6 @@ class Order(sim.Component):
         self.start_time = env.now()
         self.end_time = None
         self.execution_time = 0
-        self.method = method
         self.report = report
         
     def create_report(self):

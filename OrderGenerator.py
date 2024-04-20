@@ -7,14 +7,13 @@ from Order import Order
 from OrderType import OrderType
 
 class OrderGenerator(sim.Component):
-    def __init__(self, queue, method, machines, env, report):
+    def __init__(self, queues, machines, env, reports):
         super().__init__()
-        self.queue = queue
+        self.queues = queues
         self.num_generated = 0
-        self.method = method
         self.machines = machines
         self.env = env
-        self.report = report
+        self.reports = reports
 
     def process(self):
         order_types = list(OrderType)
@@ -22,13 +21,18 @@ class OrderGenerator(sim.Component):
         
         while Config.gui_running:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
-            self.queue.add(Order(random_order_type, sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample(), 0, 0, 1, self.method, self.env, self.report))
+            
+            size = sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample()
             self.num_generated += 1
             self.hold(abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample()))
             
-            for machine in self.machines:
-                if machine.status() == 'passive':
-                    machine.activate()
+            for i in range(len(self.queues)):
+                order = Order(random_order_type, size, 0, 0, 1, self.env, self.reports[i])
+                self.queues[i].add(order)
+                
+                for machine in self.machines[i]:
+                    if machine.status() == 'passive':
+                        machine.activate()
         
     def create_report(self):
         logging.info(f"Ordergenerator generated {self.num_generated} orders")

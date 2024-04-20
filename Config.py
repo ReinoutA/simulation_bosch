@@ -1,5 +1,10 @@
 from OrderType import OrderType
 from Method import *
+from Schedulers.FCFS import FCFS
+from Schedulers.SJF import SJF
+from Schedulers.HRRN import HRRN
+from Schedulers.PS import PS
+from Schedulers.RR import RR
 
 TIME_LIMIT = 365
 
@@ -8,6 +13,7 @@ ENABLE_SIM_TRACE = False
 LOG_QUEUES = False
 LOG_MACHINES = False
 LOG_GENERATOR = False
+LOG_DATAFRAMES =  True
 
 # Generator parameters
 ORDER_SIZE_MEAN = 100000

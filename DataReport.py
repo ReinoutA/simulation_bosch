@@ -18,7 +18,7 @@ class DataReport:
                    "Execution time": order.execution_time}
         
         self.df.loc[len(self.df)] = new_row
-        logging.info(f"Appending DataFrame {self.name}")
+        # logging.info(f"Appending DataFrame {self.name}")
         self.mutex.release()
         
     def draw(self, name, ax, color):
@@ -29,7 +29,6 @@ class DataReport:
         self.mutex.acquire()
 
         if self.df.empty:
-            logging.info(f"Empty DataFrame when drawing {self.name}")
             logging.error(f"Empty DataFrame when drawing {self.name}")
         else:
             self.df["Turnaround time"] = self.df["End time"] - self.df["Starting time"]
@@ -38,7 +37,7 @@ class DataReport:
             self.df = self.df.reset_index(drop=True)
             x_values = np.linspace(0, 100, len(self.df)) 
             
-            logging.info(f"Drawing {self.name}")
+            # logging.info(f"Drawing {self.name}")
             if color is not None:
                 ax.plot(x_values, self.df["Response ratio"], label=name, color=color)
             else:
@@ -48,10 +47,11 @@ class DataReport:
             
         self.mutex.release()
         
-    def print(self):
+    def log_info(self):
         self.mutex.acquire()
         if self.df.empty:
             logging.error(f"Empty DataFrame when printing {self.name}")
         else:
             logging.info(f"Printing DataFrame {self.name}")
+            logging.info(self.df)
         self.mutex.release()
