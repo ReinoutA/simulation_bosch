@@ -204,23 +204,23 @@ class Gui(Thread):
         #     RUNTIME TABLE     #
         #########################
         
-        tk.Label(dialog, text="Runtime table:").grid(row=4, column=0)
+        tk.Label(dialog, text="Runtime table:").grid(row=3, column=0)
         
         tree = self.render_runtime_table(dialog, configuration)
-        tree.grid(row=5, column=0, sticky='nsew')
-        tk.Button(dialog, text="Edit", command=lambda: self.edit_runtime_row(dialog, configuration, tree)).grid(row=6, column=0, sticky='ew')
+        tree.grid(row=4, column=0, sticky='nsew')
+        tk.Button(dialog, text="Edit", command=lambda: self.edit_runtime_row(dialog, configuration, tree)).grid(row=5, column=0, sticky='ew')
         
         #########################
         #     ALLOWED TABLE     #
         #########################
         
-        tk.Label(dialog, text="Allowed order types:").grid(row=0, column=0)
+        tk.Label(dialog, text="Allowed order types:").grid(row=0, column=1)
         
         tree = self.render_allowed_table(dialog, configuration)
-        tree.grid(row=7, column=0, sticky='nsew')
+        tree.grid(row=1, column=1, sticky='nsew')
         
         button_frame = tk.Frame(dialog)
-        button_frame.grid(row=8, column=0, sticky='ew') 
+        button_frame.grid(row=2, column=1, sticky='ew') 
 
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
@@ -228,7 +228,25 @@ class Gui(Thread):
         tk.Button(button_frame, text="Add", command=lambda: self.add_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
         tk.Button(button_frame, text="Remove", command=lambda: self.remove_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
         
-        tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=9, column=0, sticky='ew')
+        #########################
+        #     PRIORITY QUEUE    #
+        #########################
+        
+        tk.Label(dialog, text="Allowed order types:").grid(row=3, column=1)
+        
+        tree = self.render_priority_list(dialog, configuration)
+        tree.grid(row=4, column=1, sticky='nsew')
+        
+        button_frame = tk.Frame(dialog)
+        button_frame.grid(row=5, column=1, sticky='ew') 
+
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+
+        tk.Button(button_frame, text="Up", command=lambda: self.higher_priority(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Down", command=lambda: self.lower_priority(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
+        
+        tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=6, column=0, sticky='ew')
     
     def render_transition_table(self, dialog, configuration):
         tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
@@ -382,7 +400,7 @@ class Gui(Thread):
         for value in configuration.can_do_list:
             tree.insert('', 'end', values=(value.name))
         
-        return tree   
+        return tree
     
     def add_can_do_list_row(self, old_dialog, configuration, tree):
         dialog = tk.Toplevel(self.root)
@@ -423,6 +441,39 @@ class Gui(Thread):
             if values[0] == type.name:
                 tree.delete(item)
                 break
+        self.render_tables(old_dialog, configuration)
+    
+    def render_priority_list(self, dialog, configuration):
+        tree = ttk.Treeview(dialog, columns=('Type'), show='headings')
+        tree.heading('Type', text='Type')
+        
+        for value in configuration.priority_list:
+            tree.insert('', 'end', values=(value.name))
+        
+        return tree
+    
+    def higher_priority(self, old_dialog, configuration, tree):
+        selected_id = tree.selection()[0]
+        selected_index = tree.index(selected_id)
+
+        if selected_index > 0:
+            before_id = tree.get_children()[selected_index - 1]
+            tree.move(selected_id, '', selected_index - 1)
+            tree.move(before_id, '', selected_index)
+            configuration.priority_list[selected_index], configuration.priority_list[selected_index - 1] = configuration.priority_list[selected_index - 1], configuration.priority_list[selected_index]
+            
+        self.render_tables(old_dialog, configuration)
+        
+    def lower_priority(self, old_dialog, configuration, tree):
+        selected_id = tree.selection()[0]
+        selected_index = tree.index(selected_id)
+
+        if selected_index < len(configuration.priority_list):
+            before_id = tree.get_children()[selected_index + 1]
+            tree.move(selected_id, '', selected_index + 1)
+            tree.move(before_id, '', selected_index)
+            configuration.priority_list[selected_index], configuration.priority_list[selected_index + 1] = configuration.priority_list[selected_index + 1], configuration.priority_list[selected_index]
+            
         self.render_tables(old_dialog, configuration)
     
     def use_new_configuration(self):
