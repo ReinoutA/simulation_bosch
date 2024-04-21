@@ -22,12 +22,17 @@ class Configuration:
         self.can_do_list.append(type)
         self.priority_list.append(type)
         
-        for key, value in self.transitions:
-            if key[0] == type or key[1] == type:
-                del self.transitions[key]
-        
     def remove_type(self, type):
-        del self.transitions[type]
+        keys_to_remove = []
+        for key, value in self.transitions.items():
+            if key[0] == type or key[1] == type:
+                keys_to_remove.append(key)
+
+        for key in keys_to_remove:
+            del self.transitions[key]
+                
+        del self.runtime[type]
+        self.can_do_list.remove(type)
         self.priority_list.remove(type)
     
     def add_transition(self, type_from, type_to, cost):

@@ -16,6 +16,8 @@ import Config
 from Simulation import Simulation
 
 order_type_map = {e.name: e for e in OrderType}
+order_types = [e for e in OrderType]
+order_type_names = [type.name for type in order_types]
 
 class Gui(Thread):
     def __init__(self,):
@@ -157,7 +159,7 @@ class Gui(Thread):
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        tk.Button(button_frame, text="Edit machine", command=self.change_configuration).grid(row=0, column=0, sticky='ew')
+        tk.Button(button_frame, text="Edit", command=self.change_configuration).grid(row=0, column=0, sticky='ew')
         tk.Button(button_frame, text="Close", command=dialog.destroy).grid(row=0, column=1, sticky='ew')
         
     def change_configuration(self):
@@ -172,18 +174,20 @@ class Gui(Thread):
                 break
         
         dialog = tk.Toplevel(self.root)
+        self.render_tables(dialog, configuration)
+        
+    
+    def render_tables(self, dialog, configuration):
         dialog.title(f"Configuration of {configuration.name}")
         dialog.grab_set()
         
+        #########################
+        #   TRANSITION TABLE    #
+        #########################
+        
         tk.Label(dialog, text="Transition table:").grid(row=0, column=0)
-        tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
-        tree.heading('From', text='From')
-        tree.heading('To', text='To')
-        tree.heading('Cost', text='Cost')
-
-        for key, value in configuration.transitions.items():
-            tree.insert('', 'end', values=(key[0].name, key[1].name, value))
-
+        
+        tree = self.render_transition_table(dialog, configuration)
         tree.grid(row=1, column=0, sticky='nsew')
         
         button_frame = tk.Frame(dialog)
@@ -192,41 +196,78 @@ class Gui(Thread):
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        tk.Button(button_frame, text="Add row", command=lambda: self.add_transition_row(configuration, tree)).grid(row=1, column=0, sticky='ew')
-        tk.Button(button_frame, text="Edit row", command=lambda: self.edit_transition_row(configuration, tree)).grid(row=1, column=1, sticky='ew')
-        tk.Button(button_frame, text="Remove row", command=lambda: self.remove_transition_row(configuration, tree)).grid(row=1, column=2, sticky='ew')
-        tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=3, column=0, sticky='ew')
+        tk.Button(button_frame, text="Add", command=lambda: self.add_transition_row(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Edit", command=lambda: self.edit_transition_row(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
+        tk.Button(button_frame, text="Remove ", command=lambda: self.remove_transition_row(dialog, configuration, tree)).grid(row=1, column=2, sticky='ew')
+        
+        #########################
+        #     RUNTIME TABLE     #
+        #########################
+        
+        tk.Label(dialog, text="Runtime table:").grid(row=4, column=0)
+        
+        tree = self.render_runtime_table(dialog, configuration)
+        tree.grid(row=5, column=0, sticky='nsew')
+        tk.Button(dialog, text="Edit", command=lambda: self.edit_runtime_row(dialog, configuration, tree)).grid(row=6, column=0, sticky='ew')
+        
+        #########################
+        #     ALLOWED TABLE     #
+        #########################
+        
+        tk.Label(dialog, text="Allowed order types:").grid(row=0, column=0)
+        
+        tree = self.render_allowed_table(dialog, configuration)
+        tree.grid(row=7, column=0, sticky='nsew')
+        
+        button_frame = tk.Frame(dialog)
+        button_frame.grid(row=8, column=0, sticky='ew') 
+
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+
+        tk.Button(button_frame, text="Add", command=lambda: self.add_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Remove", command=lambda: self.remove_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
+        
+        tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=9, column=0, sticky='ew')
     
-    def add_transition_row(self, configuration, tree):
+    def render_transition_table(self, dialog, configuration):
+        tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
+        tree.heading('From', text='From')
+        tree.heading('To', text='To')
+        tree.heading('Cost', text='Cost')
+
+        for key, value in configuration.transitions.items():
+            tree.insert('', 'end', values=(key[0].name, key[1].name, value))
+            
+        return tree
+    
+    def add_transition_row(self, old_dialog, configuration, tree):
         dialog = tk.Toplevel(self.root)
         dialog.title("Add Transition")
         dialog.grab_set()
 
-        # Entry fields
-        from_entry = tk.Entry(dialog)
-        from_entry.grid(row=0, column=0)
-        to_entry = tk.Entry(dialog)
-        to_entry.grid(row=0, column=1)
+        selected_type1_name = tk.StringVar(dialog)
+        selected_type1_name.set(order_type_names[0])
+        type_menu = tk.OptionMenu(dialog, selected_type1_name, *order_type_names)
+        type_menu.grid(row=0, column=0)
+        selected_type2_name = tk.StringVar(dialog)
+        selected_type2_name.set(order_type_names[0])
+        type_menu = tk.OptionMenu(dialog, selected_type2_name, *order_type_names)
+        type_menu.grid(row=0, column=1)
         cost_entry = tk.Entry(dialog)
         cost_entry.grid(row=0, column=2)
 
-        # OK button
-        tk.Button(dialog, text="OK", command=lambda: self.add_transition(dialog, configuration, from_entry.get(), to_entry.get(), int(cost_entry.get()), tree)).grid(row=1, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.add_transition(old_dialog, dialog, configuration, order_type_map[selected_type1_name.get()], order_type_map[selected_type2_name.get()], int(cost_entry.get()), tree)).grid(row=1, column=0, columnspan=3)
 
-    def add_transition(self, dialog, configuration, from_value, to_value, cost, tree):
-        try:
-            from_value = order_type_map[from_value]
-            to_value = order_type_map[to_value]
-        except KeyError:
-            raise ValueError("from_value and to_value must be valid names of OrderTypes")
-
+    def add_transition(self, old_dialog, dialog, configuration, from_value, to_value, cost, tree):
         configuration.transitions[(from_value, to_value)] = cost
         tree.insert('', 'end', values=(from_value.name, to_value.name, cost))
+        self.render_tables(old_dialog, configuration)
         dialog.destroy()
     
-    def edit_transition_row(self, configuration, tree):
+    def edit_transition_row(self, old_dialog, configuration, tree):
         dialog = tk.Toplevel(self.root)
-        dialog.title("Edit Transition")
+        dialog.title("Edit transition entry")
         dialog.grab_set()
 
         tk.Label(dialog, text="Enter the new cost for the transition:").grid(row=0, column=0)
@@ -240,22 +281,17 @@ class Gui(Thread):
         values = tree.item(selected_item[0], 'values')
         from_value, to_value, _ = values
 
-        tk.Button(dialog, text="OK", command=lambda: self.edit_transition(dialog, configuration, from_value, to_value, int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.edit_transition(old_dialog, dialog, configuration, order_type_map[from_value], order_type_map[to_value], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
     
-    def edit_transition(self, dialog, configuration, from_value, to_value, cost, tree):
-        try:
-            from_value = order_type_map[from_value]
-            to_value = order_type_map[to_value]
-        except KeyError:
-            raise ValueError("from_value and to_value must be valid names of OrderTypes")
-
+    def edit_transition(self, old_dialog, dialog, configuration, from_value, to_value, cost, tree):
         self.remove_transition_row(configuration, tree)
         configuration.transitions[(from_value, to_value)] = cost
         
         tree.insert('', 'end', values=(from_value.name, to_value.name, cost))
+        self.render_tables(old_dialog, configuration)
         dialog.destroy()
         
-    def remove_transition_row(self, configuration, tree):
+    def remove_transition_row(self, old_dialog, configuration, tree):
         selected_item = tree.selection()
         if not selected_item:
             return  # No item is selected
@@ -263,14 +299,14 @@ class Gui(Thread):
         values = tree.item(selected_item[0], 'values')
         from_value, to_value, cost = values
 
-        self.remove_transition(configuration, from_value, to_value, tree)
+        self.remove_transition(old_dialog, configuration, from_value, to_value, tree)
 
-    def remove_transition(self, configuration, from_value, to_value, tree):
+    def remove_transition(self, old_dialog, configuration, from_value, to_value, tree):
         try:
             from_value = order_type_map[from_value]
             to_value = order_type_map[to_value]
         except KeyError:
-            raise ValueError("from_value and to_value must be valid names of OrderTypes")
+            raise ValueError("from_value and to_value must be valid names of OrderType")
 
         # Remove the transition from the configuration
         del configuration.transitions[(from_value, to_value)]
@@ -281,6 +317,113 @@ class Gui(Thread):
             if values[0] == from_value.name and values[1] == to_value.name:
                 tree.delete(item)
                 break
+        
+        self.render_tables(old_dialog, configuration)
+            
+    def render_runtime_table(self, dialog, configuration):
+        tree = ttk.Treeview(dialog, columns=('Order type', '# units / day'), show='headings')
+        tree.heading('Order type', text='Order type')
+        tree.heading('# units / day', text='# units / day')
+
+        for key, value in configuration.runtime.items():
+            tree.insert('', 'end', values=(key.name, value))
+            
+        return tree
+    
+    def edit_runtime_row(self, old_dialog, configuration, tree):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Edit runtime entry")
+        dialog.grab_set()
+
+        tk.Label(dialog, text="Enter the new runtime value:").grid(row=0, column=0)
+        cost_entry = tk.Entry(dialog)
+        cost_entry.grid(row=1, column=0)
+
+        selected_item = tree.selection()
+        if not selected_item:
+            return  # No item is selected
+
+        values = tree.item(selected_item[0], 'values')
+        tk.Button(dialog, text="OK", command=lambda: self.edit_runtime(old_dialog, dialog, configuration, order_type_map[values[0]], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
+    
+    def edit_runtime(self, old_dialog, dialog, configuration, type, cost, tree):
+        self.remove_runtime_row(configuration, tree)
+        configuration.runtime[type] = cost
+        
+        tree.insert('', 'end', values=(type.name, cost))
+        self.render_tables(old_dialog, configuration)
+        dialog.destroy()
+        
+    def remove_runtime_row(self, old_dialog, configuration, tree):
+        selected_item = tree.selection()
+        if not selected_item:
+            return  # No item is selected
+
+        values = tree.item(selected_item[0], 'values')
+        self.remove_runtime(old_dialog, configuration, order_type_map[values[0]], tree)
+
+    def remove_runtime(self, old_dialog, configuration, type, tree):
+        # Remove the transition from the configuration
+        del configuration.runtime[type]
+
+        # Remove the transition from the tree
+        for item in tree.get_children():
+            values = tree.item(item, 'values')
+            if values[0] == type.name:
+                tree.delete(item)
+                break
+            
+        self.render_tables(old_dialog, configuration)
+            
+    def render_allowed_table(self, dialog, configuration):
+        tree = ttk.Treeview(dialog, columns=('Type'), show='headings')
+        tree.heading('Type', text='Type')
+        
+        for value in configuration.can_do_list:
+            tree.insert('', 'end', values=(value.name))
+        
+        return tree   
+    
+    def add_can_do_list_row(self, old_dialog, configuration, tree):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Add order type")
+        dialog.grab_set()
+
+        tk.Label(dialog, text="Choose the new order type:").grid(row=0, column=0)
+
+        selected_type_name = tk.StringVar(dialog)
+        selected_type_name.set(order_type_names[0])
+
+        type_menu = tk.OptionMenu(dialog, selected_type_name, *order_type_names)
+        type_menu.grid(row=1, column=0)
+
+        tk.Button(dialog, text="OK", command=lambda: self.add_can_do_list(old_dialog, dialog, configuration, order_type_map[selected_type_name.get()], tree)).grid(row=2, column=0, columnspan=3)
+
+    def add_can_do_list(self, old_dialog, dialog, configuration, type, tree):
+        runtime_val = int(simpledialog.askinteger("Input", "Enter the runtime value"))
+        if runtime_val is not None:
+            configuration.add_type(type, runtime_val)
+            tree.insert('', 'end', values=(type.name, runtime_val))
+            self.render_tables(old_dialog, configuration)
+            dialog.destroy()
+        
+    def remove_can_do_list_row(self, old_dialog, configuration, tree):
+        selected_item = tree.selection()
+        if not selected_item:
+            return  # No item is selected
+
+        type = tree.item(selected_item[0], 'values')
+
+        self.remove_can_do_list(old_dialog, configuration, order_type_map[type[0]], tree)
+
+    def remove_can_do_list(self, old_dialog, configuration, type, tree):
+        configuration.remove_type(type)
+        for item in tree.get_children():
+            values = tree.item(item, 'values')
+            if values[0] == type.name:
+                tree.delete(item)
+                break
+        self.render_tables(old_dialog, configuration)
     
     def use_new_configuration(self):
         self.root.grab_release()
@@ -297,7 +440,3 @@ class Gui(Thread):
                     new_options.append(f)
                
         self.combo["values"] = new_options
-            
-            
-    # def load_params(self):
-    #     with open("parameters.json") as parameters:
