@@ -42,12 +42,15 @@ class Gui(Thread):
         
         add_scheduler_button = Button(button_frame, text="Add scheduler", command=self.add_scheduler)
         add_scheduler_button.grid(row=0, column=0)
+        
+        remove_scheduler_button = Button(button_frame, text="Remove scheduler", command=self.remove_scheduler)
+        remove_scheduler_button.grid(row=1, column=0)
 
         start_simulation_button = Button(button_frame, text="Start simulation", command=self.start_simulation)
-        start_simulation_button.grid(row=1, column=0)
+        start_simulation_button.grid(row=2, column=0)
 
         stop_simulation_button = Button(button_frame, text="Stop simulation", command=self.stop_simulation)
-        stop_simulation_button.grid(row=2, column=0)
+        stop_simulation_button.grid(row=3, column=0)
         
 
         self.fig = Figure(figsize=(5, 5))
@@ -79,7 +82,6 @@ class Gui(Thread):
             self.ax.legend()
             self.ax.grid()
             self.canvas.draw()
-            # self.root.after(REFRESH_RATE, lambda: self.draw_plot()) 
     
     def start_simulation(self):
         if not Config.simulation_running:
@@ -99,15 +101,26 @@ class Gui(Thread):
             self.canvas.draw()
             
     def add_scheduler(self):
-        if not Config.simulation_running and self.selected_option.get() not in self.selected_schedulers:
+        if self.selected_option.get() not in self.selected_schedulers:
             self.selected_schedulers.append(self.selected_option.get())
+    
+    def remove_scheduler(self):
+        selected = self.selected_option.get()[:-1]
+        if selected in self.selected_schedulers:
+            self.selected_schedulers.remove(selected)
             
     def on_combo_change(self, event):
-        selected = self.selected_option.get()
-        if selected in self.selected_schedulers:
-            self.combo.configure(background='green')
-        else:
-            self.combo.configure(background='white')
+        new_options = []
+        for f in self.options:
+            if f in self.selected_schedulers:
+                new_options.append(f"{f}*")
+            else:
+                if f.endswith('*'):
+                    new_options.append(f"{f[:-1]}")
+                else:
+                    new_options.append(f)
+               
+        self.combo["values"] = new_options
             
             
     # def load_params(self):
