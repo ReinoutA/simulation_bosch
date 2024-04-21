@@ -21,7 +21,7 @@ class Machine(sim.Component):
         self.env = env
         
     def process(self):
-        while True:
+        while Config.simulation_running and Config.gui_running:
             if len(self.queue) == 0:
                 self.passivate()
                 

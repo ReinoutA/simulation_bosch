@@ -33,9 +33,10 @@ class DataReport:
         else:
             self.df["Turnaround time"] = self.df["End time"] - self.df["Starting time"]
             self.df["Response ratio"] = self.df["Turnaround time"] / self.df["Execution time"]
-            self.df = self.df.sort_values("Response ratio")
-            self.df = self.df.reset_index(drop=True)
-            x_values = np.linspace(0, 100, len(self.df)) 
+            if self.df is not None:
+                self.df.sort_values("Response ratio", inplace=True)
+                self.df = self.df.reset_index(drop=True)
+                x_values = np.linspace(0, 100, len(self.df)) 
             
             # logging.info(f"Drawing {self.name}")
             if color is not None:
@@ -44,7 +45,6 @@ class DataReport:
                 ax.plot(x_values, self.df["Response ratio"], label=name)
 
             ax.set_yscale('log')
-            
         self.mutex.release()
         
     def log_info(self):
