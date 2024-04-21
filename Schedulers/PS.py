@@ -12,7 +12,7 @@ class PS(Method):
         order = None
         
         for o in machine.queue:
-            if o.type in machine.can_do_list:
+            if o.type in machine.configuration.can_do_list:
                 for i, o_type in enumerate(priority_list):
                     if o.type == o_type:
                         orders[i] = o

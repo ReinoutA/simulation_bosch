@@ -10,7 +10,7 @@ class HRRN(Method):
         order = None
         
         for o in machine.queue:
-            if o.type in machine.can_do_list:
+            if o.type in machine.configuration.can_do_list:
                 execution_time = o.size / machine.runtime_per_type[o.type]
                 val = o.get_response_ratio(now, execution_time)
                 if val >= worst_val:

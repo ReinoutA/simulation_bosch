@@ -9,7 +9,7 @@ class SJF(Method):
         order = None
         
         for o in machine.queue:
-            if o.size < min_size and o.type in machine.can_do_list:
+            if o.size < min_size and o.type in machine.configuration.can_do_list:
                 min_size = o.size
                 order = o
                 

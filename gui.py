@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Button
 from tkinter import simpledialog
+import tkinter.simpledialog as sd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import logging
@@ -13,6 +14,8 @@ import inspect
 from Config import *
 import Config
 from Simulation import Simulation
+
+order_type_map = {e.name: e for e in OrderType}
 
 class Gui(Thread):
     def __init__(self,):
@@ -57,7 +60,7 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Stop simulation", command=self.stop_simulation)
         stop_simulation_button.grid(row=3, column=0, sticky='ew')
         
-        stop_simulation_button = Button(button_frame, text="Change configuration", command=self.change_configuration)
+        stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
         stop_simulation_button.grid(row=4, column=0, sticky='ew')
 
         self.fig = Figure(figsize=(5, 5))
@@ -135,37 +138,152 @@ class Gui(Thread):
             self.selected_option.set(selected)
             self.on_combo_change(None)
             
-    def change_configuration(self):
+    def configuration_menu(self):
         dialog = tk.Toplevel(self.root)
         dialog.title("Configuration")
         dialog.grab_set()
 
-        # Create the treeview
-        # tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
-        # tree.heading('From', text='From')
-        # tree.heading('To', text='To')
-        # tree.heading('Cost', text='Cost')
-
-        # Insert the data
-        # for key, value in Config.configurations.transitions.items():
-        #     tree.insert('', 'end', values=(key[0].name, key[1].name, value))
-
-        # tree.pack()
-        
-        tree = ttk.Treeview(dialog, columns=('Name',), show='headings')
-        tree.heading('Name', text='Name')
+        self.tree = ttk.Treeview(dialog, columns=('Name',), show='headings')
+        self.tree.heading('Name', text='Name')
 
         for config in Config.configurations:
-            tree.insert('', 'end', values=(config.name,))
+            self.tree.insert('', 'end', values=(config.name,))
 
-        tree.pack()
+        self.tree.pack()
+
+        button_frame = tk.Frame(dialog)
+        button_frame.pack(fill='x')
+
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+
+        tk.Button(button_frame, text="Edit machine", command=self.change_configuration).grid(row=0, column=0, sticky='ew')
+        tk.Button(button_frame, text="Close", command=dialog.destroy).grid(row=0, column=1, sticky='ew')
         
-        tk.Button(dialog, text="OK", command=self.use_new_configuration).pack()
-            
+    def change_configuration(self):
+        selected_item_id = self.tree.selection()[0]
+        configuration_name = self.tree.item(selected_item_id, 'values')[0]
+        
+        configuration = None
+        
+        for c in Config.configurations:
+            if c.name == configuration_name:
+                configuration = c
+                break
+        
+        dialog = tk.Toplevel(self.root)
+        dialog.title(f"Configuration of {configuration.name}")
+        dialog.grab_set()
+        
+        tk.Label(dialog, text="Transition table:").grid(row=0, column=0)
+        tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
+        tree.heading('From', text='From')
+        tree.heading('To', text='To')
+        tree.heading('Cost', text='Cost')
+
+        for key, value in configuration.transitions.items():
+            tree.insert('', 'end', values=(key[0].name, key[1].name, value))
+
+        tree.grid(row=1, column=0, sticky='nsew')
+        
+        button_frame = tk.Frame(dialog)
+        button_frame.grid(row=2, column=0, sticky='ew') 
+
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+
+        tk.Button(button_frame, text="Add row", command=lambda: self.add_transition_row(configuration, tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Edit row", command=lambda: self.edit_transition_row(configuration, tree)).grid(row=1, column=1, sticky='ew')
+        tk.Button(button_frame, text="Remove row", command=lambda: self.remove_transition_row(configuration, tree)).grid(row=1, column=2, sticky='ew')
+        tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=3, column=0, sticky='ew')
+    
+    def add_transition_row(self, configuration, tree):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Add Transition")
+        dialog.grab_set()
+
+        # Entry fields
+        from_entry = tk.Entry(dialog)
+        from_entry.grid(row=0, column=0)
+        to_entry = tk.Entry(dialog)
+        to_entry.grid(row=0, column=1)
+        cost_entry = tk.Entry(dialog)
+        cost_entry.grid(row=0, column=2)
+
+        # OK button
+        tk.Button(dialog, text="OK", command=lambda: self.add_transition(dialog, configuration, from_entry.get(), to_entry.get(), int(cost_entry.get()), tree)).grid(row=1, column=0, columnspan=3)
+
+    def add_transition(self, dialog, configuration, from_value, to_value, cost, tree):
+        try:
+            from_value = order_type_map[from_value]
+            to_value = order_type_map[to_value]
+        except KeyError:
+            raise ValueError("from_value and to_value must be valid names of OrderTypes")
+
+        configuration.transitions[(from_value, to_value)] = cost
+        tree.insert('', 'end', values=(from_value.name, to_value.name, cost))
+        dialog.destroy()
+    
+    def edit_transition_row(self, configuration, tree):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Edit Transition")
+        dialog.grab_set()
+
+        tk.Label(dialog, text="Enter the new cost for the transition:").grid(row=0, column=0)
+        cost_entry = tk.Entry(dialog)
+        cost_entry.grid(row=1, column=0)
+
+        selected_item = tree.selection()
+        if not selected_item:
+            return  # No item is selected
+
+        values = tree.item(selected_item[0], 'values')
+        from_value, to_value, _ = values
+
+        tk.Button(dialog, text="OK", command=lambda: self.edit_transition(dialog, configuration, from_value, to_value, int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
+    
+    def edit_transition(self, dialog, configuration, from_value, to_value, cost, tree):
+        try:
+            from_value = order_type_map[from_value]
+            to_value = order_type_map[to_value]
+        except KeyError:
+            raise ValueError("from_value and to_value must be valid names of OrderTypes")
+
+        self.remove_transition_row(configuration, tree)
+        configuration.transitions[(from_value, to_value)] = cost
+        
+        tree.insert('', 'end', values=(from_value.name, to_value.name, cost))
+        dialog.destroy()
+        
+    def remove_transition_row(self, configuration, tree):
+        selected_item = tree.selection()
+        if not selected_item:
+            return  # No item is selected
+
+        values = tree.item(selected_item[0], 'values')
+        from_value, to_value, cost = values
+
+        self.remove_transition(configuration, from_value, to_value, tree)
+
+    def remove_transition(self, configuration, from_value, to_value, tree):
+        try:
+            from_value = order_type_map[from_value]
+            to_value = order_type_map[to_value]
+        except KeyError:
+            raise ValueError("from_value and to_value must be valid names of OrderTypes")
+
+        # Remove the transition from the configuration
+        del configuration.transitions[(from_value, to_value)]
+
+        # Remove the transition from the tree
+        for item in tree.get_children():
+            values = tree.item(item, 'values')
+            if values[0] == from_value.name and values[1] == to_value.name:
+                tree.delete(item)
+                break
+    
     def use_new_configuration(self):
-        # new_config = self.entry.get()
-        self.entry.master.grab_release()
-        self.entry.master.destroy()
+        self.root.grab_release()
     
     def on_combo_change(self, event):
         new_options = []
