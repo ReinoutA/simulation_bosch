@@ -1,4 +1,5 @@
 from OrderType import OrderType
+from Configuration import Configuration
 from Method import *
 from Schedulers.FCFS import FCFS
 from Schedulers.SJF import SJF
@@ -24,22 +25,65 @@ ORDER_INTERVAL_STD = 1
 # GUI parameters
 REFRESH_RATE = 10
 
-# Priority list for Priority Scheduling
-PRIORITY_LIST = [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY,]
+transitions = [
+    {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    },
+    {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    },
+    {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    },
+    {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    },
+    {
+        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+    },
+]
 
-transitions = {
-    (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-    (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-    (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
-    (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-    (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-    (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
-    (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-    (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-    (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-}
-
-runtime = [
+runtimes = [
     {
         OrderType.HIGH_QUALITY : 3000,
         OrderType.MEDIUM_QUALITY : 5000,
@@ -74,3 +118,15 @@ can_do_lists = [
     [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
     [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
 ]
+
+priority_lists = [
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+]
+
+configurations = []
+for i in range(5):
+    configurations.append(Configuration(transitions[i], runtimes[i], can_do_lists[i], priority_lists[i]))

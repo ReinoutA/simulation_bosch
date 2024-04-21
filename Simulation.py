@@ -24,8 +24,8 @@ class Simulation(Thread):
             self.reports.append(report)
 
             machines = []
-            for i in range(5):
-                machine = Machine(transitions, runtime[i], can_do_lists[i], global_queues[index], machines, Config.methods[index], env)
+            for i in range(len(Config.configurations)):
+                machine = Machine(global_queues[index], machines, Config.methods[index], env, Config.configurations[i])
                 machines.append(machine)
 
             queues = []

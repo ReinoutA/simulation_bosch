@@ -4,7 +4,7 @@ from Config import *
 class Machine(sim.Component):
     num_machines = 1
     
-    def __init__(self, transition_per_type_combination, runtime_per_type, can_do_list, global_queue, machines, method, env):
+    def __init__(self, global_queue, machines, method, env, configuration):
         super().__init__()
         self.id = Machine.num_machines
         Machine.num_machines += 1
@@ -12,13 +12,11 @@ class Machine(sim.Component):
         self.total_transition_time = 0
         self.last_order_type = 0
         self.total_profit = 0
-        self.transition_per_type_combination = transition_per_type_combination
-        self.runtime_per_type = runtime_per_type
-        self.can_do_list = can_do_list
         self.machines = machines
         self.method = method
         self.total_execution_time = 0
         self.env = env
+        self.configuration = configuration
         
     def process(self):
         while Config.simulation_running and Config.gui_running:
@@ -28,7 +26,7 @@ class Machine(sim.Component):
             order, profit = self.method.schedule_next(self)
             
             if order is not None:
-                if order.type not in self.can_do_list:
+                if order.type not in self.configuration.can_do_list:
                     self.queue.add(order)
                     for machine in self.machines:
                         if machine.status() != 'passive':
@@ -50,7 +48,10 @@ class Machine(sim.Component):
                 order.create_report()
                 
     def get_transition_time(self, order):
-        return self.transition_per_type_combination.get((self.last_order_type, order.type), 0)
+        return self.configuration.transitions.get((self.last_order_type, order.type), 0)
     
     def get_execution_time(self, order):
-        return order.size / self.runtime_per_type[order.type]
+        return order.size / self.configuration.runtime[order.type]
+    
+    def get_priority_list(self):
+        return self.configuration.priority_list

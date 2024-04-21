@@ -6,12 +6,14 @@ class PS(Method):
         super().__init__("PS")
         
     def schedule_next(self, machine):
-        orders = [None] * len(Config.PRIORITY_LIST)
+        priority_list = machine.get_priority_list()
+        
+        orders = [None] * len(priority_list)
         order = None
         
         for o in machine.queue:
             if o.type in machine.can_do_list:
-                for i, o_type in enumerate(Config.PRIORITY_LIST):
+                for i, o_type in enumerate(priority_list):
                     if o.type == o_type:
                         orders[i] = o
                         break

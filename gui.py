@@ -57,6 +57,8 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Stop simulation", command=self.stop_simulation)
         stop_simulation_button.grid(row=3, column=0, sticky='ew')
         
+        stop_simulation_button = Button(button_frame, text="Change configuration", command=self.change_configuration)
+        stop_simulation_button.grid(row=4, column=0, sticky='ew')
 
         self.fig = Figure(figsize=(5, 5))
         self.ax = self.fig.add_subplot(111)
@@ -133,6 +135,38 @@ class Gui(Thread):
             self.selected_option.set(selected)
             self.on_combo_change(None)
             
+    def change_configuration(self):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Configuration")
+        dialog.grab_set()
+
+        # Create the treeview
+        # tree = ttk.Treeview(dialog, columns=('From', 'To', 'Cost'), show='headings')
+        # tree.heading('From', text='From')
+        # tree.heading('To', text='To')
+        # tree.heading('Cost', text='Cost')
+
+        # Insert the data
+        # for key, value in Config.configurations.transitions.items():
+        #     tree.insert('', 'end', values=(key[0].name, key[1].name, value))
+
+        # tree.pack()
+        
+        tree = ttk.Treeview(dialog, columns=('Name',), show='headings')
+        tree.heading('Name', text='Name')
+
+        for config in Config.configurations:
+            tree.insert('', 'end', values=(config.name,))
+
+        tree.pack()
+        
+        tk.Button(dialog, text="OK", command=self.use_new_configuration).pack()
+            
+    def use_new_configuration(self):
+        # new_config = self.entry.get()
+        self.entry.master.grab_release()
+        self.entry.master.destroy()
+    
     def on_combo_change(self, event):
         new_options = []
         for f in self.options:
