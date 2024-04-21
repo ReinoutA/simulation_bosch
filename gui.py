@@ -18,6 +18,9 @@ class Gui(Thread):
         self.reports = []
         
     def run(self):
+        Config.gui_running = True
+        Config.simulation_running = False
+        
         self.root = tk.Tk()
         self.root.title("Scheduling simulation")
 
@@ -31,7 +34,7 @@ class Gui(Thread):
         self.selected_option = tk.StringVar(self.root)
         self.selected_option.set(self.options[0])
         
-        self.combo = ttk.Combobox(self.root, textvariable=self.selected_option)
+        self.combo = ttk.Combobox(self.root, textvariable=self.selected_option, state="readonly")
         self.combo['values'] = self.options
         self.combo.bind('<<ComboboxSelected>>', self.on_combo_change)
         self.combo.grid(row=0, column=1)
@@ -41,16 +44,16 @@ class Gui(Thread):
         # self.option_menu.grid(row=0, column=1)
         
         add_scheduler_button = Button(button_frame, text="Add scheduler", command=self.add_scheduler)
-        add_scheduler_button.grid(row=0, column=0)
+        add_scheduler_button.grid(row=0, column=0, sticky='ew')
         
         remove_scheduler_button = Button(button_frame, text="Remove scheduler", command=self.remove_scheduler)
-        remove_scheduler_button.grid(row=1, column=0)
+        remove_scheduler_button.grid(row=1, column=0, sticky='ew')
 
         start_simulation_button = Button(button_frame, text="Start simulation", command=self.start_simulation)
-        start_simulation_button.grid(row=2, column=0)
+        start_simulation_button.grid(row=2, column=0, sticky='ew')
 
         stop_simulation_button = Button(button_frame, text="Stop simulation", command=self.stop_simulation)
-        stop_simulation_button.grid(row=3, column=0)
+        stop_simulation_button.grid(row=3, column=0, sticky='ew')
         
 
         self.fig = Figure(figsize=(5, 5))

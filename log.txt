@@ -1,102 +1,61 @@
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-ERROR:root:Reports index out of range
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 INFO:root:Printing DataFrame FCFS
 INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0       300    1081.950964   1086.708656        4.757692         4.757692             1.0
-1       394    1415.579440   1436.976975       21.397535        21.397535             1.0
-2       202     722.276831    730.550049        8.273218         8.273218             1.0
-3       316    1137.216916   1158.620865       21.403949        21.403949             1.0
-4       318    1143.431017   1171.836115       28.405098        28.405098             1.0
+0        67     466.660200    470.863998        4.203797         4.203797             1.0
+1        62     431.489408    436.324836        4.835427         4.835427             1.0
+2        63     438.622373    449.483410       10.861036        10.861036             1.0
+3        60     417.968186    432.460164       14.491978        14.491978             1.0
+4        57     400.007027    414.496219       14.489192        14.489192             1.0
 ...     ...            ...           ...             ...              ...             ...
-3687   7380   25826.865153  28024.247322       22.172445              NaN             NaN
-3688   7376   25811.669959  28034.155975        3.639689              NaN             NaN
-3689   7382   25834.952689  28040.353123       24.962053              NaN             NaN
-3690   7372   25799.380093  28042.342141       23.708431              NaN             NaN
-3691   7356   25745.254088  28078.762605       67.951025              NaN             NaN
+4435   4427   30953.824979  32501.291087       49.819093              NaN             NaN
+4436   4439   31034.098254  32502.438016        4.501792              NaN             NaN
+4437   4437   31018.149546  32510.636295       20.489047              NaN             NaN
+4438   4432   30986.372452  32517.087573       48.897584              NaN             NaN
+4439   4433   30993.376862  32537.178314       33.489293              NaN             NaN
 
-[3692 rows x 6 columns]
-INFO:root:Printing DataFrame HRRN
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0      1353    4767.360414   4767.470891        0.110477         0.110477             1.0
-1      7571   26492.489389  26495.733949        3.244560         3.244560             1.0
-2      6853   24010.610531  24017.038885        6.428354         6.428354             1.0
-3      7637   26718.092585  26726.138723        8.046138         8.046138             1.0
-4      7545   26398.661462  26404.640337        5.978875         5.978875             1.0
-...     ...            ...           ...             ...              ...             ...
-3980   7959   27850.605120  28015.980165       21.591969              NaN             NaN
-3981   7957   27843.324106  28025.257448        6.711766              NaN             NaN
-3982   7971   27891.970376  28027.638987       20.273158              NaN             NaN
-3983   7977   27909.715952  28038.853442       10.116849              NaN             NaN
-3984   7953   27831.297748  28079.286921       63.119791              NaN             NaN
-
-[3985 rows x 6 columns]
+[4440 rows x 6 columns]

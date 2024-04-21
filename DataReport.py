@@ -22,7 +22,7 @@ class DataReport:
         self.mutex.release()
         
     def draw(self, name, ax, color):
-        if not gui_running:
+        if not Config.gui_running:
             logging.error(f"Gui running is False")
             return
         
@@ -38,7 +38,6 @@ class DataReport:
                 self.df = self.df.reset_index(drop=True)
                 x_values = np.linspace(0, 100, len(self.df)) 
             
-            # logging.info(f"Drawing {self.name}")
             if color is not None:
                 ax.plot(x_values, self.df["Response ratio"], label=name, color=color)
             else:
