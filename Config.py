@@ -25,7 +25,7 @@ ORDER_INTERVAL_STD = 1
 REFRESH_RATE = 10
 
 # methods = ["FCFS", "SJF", "HRRN", "PS" , "RR-7", "RR-14", "RR-28"]
-methods = [FCFS(), SJF(), HRRN(), PS(), RR(7), RR(14), RR(28)]
+# methods = [FCFS(), SJF(), HRRN(), PS(), RR(7), RR(14), RR(28)]
 # methods = [FCFS()]
 
 # Priority list for Priority Scheduling
@@ -45,29 +45,29 @@ transitions = {
 
 runtime = [
     {
-        OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 30,
-        OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 20,
-        OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 10,
+        OrderType.HIGH_QUALITY : 3000,
+        OrderType.MEDIUM_QUALITY : 5000,
+        OrderType.LOW_QUALITY : 10000,
     },
     {
-        OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 50,
-        OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 25,
-        OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 20,
+        OrderType.HIGH_QUALITY : 2000,
+        OrderType.MEDIUM_QUALITY : 4000,
+        OrderType.LOW_QUALITY : 5000,
     },
     {
-        OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 100,
-        OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 50,
-        OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 30,
+        OrderType.HIGH_QUALITY : 1000,
+        OrderType.MEDIUM_QUALITY : 2000,
+        OrderType.LOW_QUALITY : 3000,
     },
     {
-        OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 10,
-        OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 5,
-        OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 5,
+        OrderType.HIGH_QUALITY : 10000,
+        OrderType.MEDIUM_QUALITY : 20000,
+        OrderType.LOW_QUALITY : 20000,
     },
     {
-        OrderType.HIGH_QUALITY : ORDER_SIZE_MEAN / 35,
-        OrderType.MEDIUM_QUALITY : ORDER_SIZE_MEAN / 20,
-        OrderType.LOW_QUALITY : ORDER_SIZE_MEAN / 15,
+        OrderType.HIGH_QUALITY : 3000,
+        OrderType.MEDIUM_QUALITY : 5000,
+        OrderType.LOW_QUALITY : 7000,
     },
 ]
 

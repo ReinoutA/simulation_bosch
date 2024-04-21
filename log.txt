@@ -1,0 +1,92 @@
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+INFO:root:Printing DataFrame FCFS
+INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
+0        30     213.344662    248.387388       35.042726        35.042726             1.0
+1        28     197.214242    217.038743       19.824501        19.824501             1.0
+2         6      46.889861     51.821904        4.932044         4.932044             1.0
+3         5      41.677910     57.892178       16.214268        16.214268             1.0
+4         0       6.421392     26.047452       19.626061        19.626061             1.0
+...     ...            ...           ...             ...              ...             ...
+4014   4004   28032.320526  29346.171996       60.652864              NaN             NaN
+4015   4018   28129.016693  29348.133895       14.763129              NaN             NaN
+4016   4010   28073.557303  29356.372285       53.297569              NaN             NaN
+4017   4015   28105.710649  29362.031397       27.933225              NaN             NaN
+4018   4017   28121.854371  29364.020023       10.938348              NaN             NaN
+
+[4019 rows x 6 columns]
+ERROR:root:Reports index out of range
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+INFO:root:Printing DataFrame FCFS
+INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
+0      4219     104.033583    104.971343        0.937760         0.937760             1.0
+1      4293     366.175216    367.481602        1.306386         1.306386             1.0
+2      4307     417.335401    422.992987        5.657587         5.657587             1.0
+3      4203      44.329072     44.566541        0.237469         0.237469             1.0
+4      4339     532.777031    561.965317       29.188287        29.188287             1.0
+...     ...            ...           ...             ...              ...             ...
+1939   8079   13647.005713  14759.284296        1.510075              NaN             NaN
+1940   8069   13611.279147  14763.732843       16.853364              NaN             NaN
+1941   8063   13591.562266  14792.430693       86.345912              NaN             NaN
+1942   8061   13584.386457  14801.388937       99.596872              NaN             NaN
+1943   8077   13640.624374  14858.856955       47.995848              NaN             NaN
+
+[1944 rows x 6 columns]
+INFO:root:Printing DataFrame HRRN
+INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
+0      5242    3694.561300   3696.037482        1.476182         1.476182             1.0
+1      5254    3734.241935   3745.903368       11.661433        11.661433             1.0
+2      4308     417.335401    419.760081        2.424680         2.424680             1.0
+3      5240    3687.061758   3694.999875        7.938117         7.938117             1.0
+4      5302    3904.790740   3914.990378       10.199638        10.199638             1.0
+...     ...            ...           ...             ...              ...             ...
+2092   8380   14696.454359  14759.856026        6.208663              NaN             NaN
+2093   8382   14704.750368  14759.991569        9.891086              NaN             NaN
+2094   8384   14711.566647  14777.292430       10.117187              NaN             NaN
+2095   8372   14676.534078  14782.785380       59.056310              NaN             NaN
+2096   8386   14718.461855  14837.344195       27.367040              NaN             NaN
+
+[2097 rows x 6 columns]
