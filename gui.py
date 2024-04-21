@@ -1,12 +1,14 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Button
+from tkinter import simpledialog
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import logging
 from threading import Thread
 import os
 import glob
+import inspect
 
 from Config import *
 import Config
@@ -89,11 +91,26 @@ class Gui(Thread):
     def start_simulation(self):
         if not Config.simulation_running:
             Config.simulation_running = True
-            Config.methods = [globals()[name]() for name in self.selected_schedulers]
-        
+            Config.methods = []
+            
+            for name in self.selected_schedulers:
+                cls = globals()[name]
+                args = inspect.signature(cls.__init__).parameters
+                
+                if len(args) > 1:
+                    arg_values = {}
+                    for arg in list(args.keys())[1:]:
+                        value = simpledialog.askstring("Input", f"Enter value for {arg} in {name}:")
+                        arg_values[arg] = value
+                    instance = cls(**arg_values)
+                else:
+                    instance = cls()
+                    
+                Config.methods.append(instance)
+            
             graphing_thread = Thread(target=self.draw_plot)
             graphing_thread.start()
-        
+            
             self.reports = []
             Simulation(self.reports).start()
     
@@ -106,11 +123,15 @@ class Gui(Thread):
     def add_scheduler(self):
         if self.selected_option.get() not in self.selected_schedulers:
             self.selected_schedulers.append(self.selected_option.get())
+            self.selected_option.set(self.selected_option.get() + "*")
+            self.on_combo_change(None)
     
     def remove_scheduler(self):
         selected = self.selected_option.get()[:-1]
         if selected in self.selected_schedulers:
             self.selected_schedulers.remove(selected)
+            self.selected_option.set(selected)
+            self.on_combo_change(None)
             
     def on_combo_change(self, event):
         new_options = []

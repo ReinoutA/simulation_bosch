@@ -1,10 +1,10 @@
 from Method import *
     
 class RR(Method):
-    def __init__(self):
-        window_size = 7
-        super().__init__(f"RR-{window_size}")
-        self.window_size = window_size
+    def __init__(self, window_size):
+        # window_size = 7
+        super().__init__(f"RR-{int(window_size)}")
+        self.window_size = int(window_size)
         
     def schedule_next(self, machine):
         profit = 0
