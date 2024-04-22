@@ -317,25 +317,15 @@ class Gui(Thread):
         values = tree.item(selected_item[0], 'values')
         from_value, to_value, cost = values
 
-        self.remove_transition(old_dialog, configuration, from_value, to_value, tree)
+        self.remove_transition(old_dialog, configuration, order_type_map[from_value], order_type_map[to_value], tree)
 
     def remove_transition(self, old_dialog, configuration, from_value, to_value, tree):
-        try:
-            from_value = order_type_map[from_value]
-            to_value = order_type_map[to_value]
-        except KeyError:
-            raise ValueError("from_value and to_value must be valid names of OrderType")
-
-        # Remove the transition from the configuration
         del configuration.transitions[(from_value, to_value)]
-
-        # Remove the transition from the tree
         for item in tree.get_children():
             values = tree.item(item, 'values')
             if values[0] == from_value.name and values[1] == to_value.name:
                 tree.delete(item)
                 break
-        
         self.render_tables(old_dialog, configuration)
             
     def render_runtime_table(self, dialog, configuration):
