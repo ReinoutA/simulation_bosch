@@ -14,7 +14,7 @@ class RR(Method):
         
             execution_time = machine.get_execution_time(order)
             if execution_time > self.window_size:
-                left_over = int((execution_time - self.window_size) * machine.runtime_per_type[order.type])
+                left_over = int((execution_time - self.window_size) * machine.configuration.runtime[order.type])
                 profit = order.profit * (1 - (left_over / order.size))
                 order.size = left_over
                 machine.queue.add(order)
