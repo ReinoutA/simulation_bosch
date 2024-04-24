@@ -11,4 +11,6 @@ with open(f"env.txt", "w+") as file:
     pass
 
 Config.gui_running = True
-Gui().start()
+gui = Gui()
+gui.start()
+gui.join()

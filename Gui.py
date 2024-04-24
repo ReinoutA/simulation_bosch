@@ -6,10 +6,12 @@ import tkinter.simpledialog as sd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import logging
+import threading
 from threading import Thread
 import os
 import glob
 import inspect
+import time
 
 from Config import *
 import Config
@@ -118,6 +120,8 @@ class Gui(Thread):
             graphing_thread = Thread(target=self.draw_plot)
             graphing_thread.start()
             
+            time.sleep(0.1)
+
             self.reports = []
             Simulation(self.reports).start()
     
