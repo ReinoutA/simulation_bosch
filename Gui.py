@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Button
 from tkinter import simpledialog
+from tkinter import messagebox
 import tkinter.simpledialog as sd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -25,6 +26,8 @@ class Gui(Thread):
     def __init__(self,):
         super().__init__()
         self.reports = []
+        self.simulation = None
+        self.graphing_thread = None
         
     def run(self):
         Config.gui_running = True
@@ -76,6 +79,12 @@ class Gui(Thread):
 
         self.root.mainloop()
         Config.gui_running = False
+
+        if self.simulation is not None:
+            self.simulation.join()
+
+        if self.graphing_thread is not None:
+            self.graphing_thread.join()
         
     def draw_plot(self):
         while Config.simulation_running:
@@ -103,7 +112,12 @@ class Gui(Thread):
             Config.methods = []
             
             for name in self.selected_schedulers:
-                cls = globals()[name]
+                try:
+                    cls = globals()[name]
+                except KeyError:
+                    messagebox.showerror(f"ERROR: import {name} in  Config.py")
+                    continue
+
                 args = inspect.signature(cls.__init__).parameters
                 
                 if len(args) > 1:
@@ -117,13 +131,13 @@ class Gui(Thread):
                     
                 Config.methods.append(instance)
             
-            graphing_thread = Thread(target=self.draw_plot)
-            graphing_thread.start()
+            self.graphing_thread = Thread(target=self.draw_plot)
+            self.graphing_thread.start()
             
             time.sleep(0.1)
 
             self.reports = []
-            Simulation(self.reports).start()
+            self.simulation = Simulation(self.reports).start()
     
     def stop_simulation(self):
         if Config.simulation_running:

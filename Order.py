@@ -9,10 +9,10 @@ class Order(sim.Component):
         Order.counter += 1
         self.type = type
         self.size = abs(size)
-        self.deadline = deadline
+        self.start_time = env.now()
+        self.deadline = self.start_time + deadline
         self.received_date = received_date
         self.profit = profit
-        self.start_time = env.now()
         self.end_time = None
         self.execution_time = 0
         self.report = report
@@ -22,3 +22,6 @@ class Order(sim.Component):
             
     def get_response_ratio(self, now, execution_time):
         return (now - self.start_time) / execution_time
+    
+    def get_time_left(self, now):
+        return self.deadline - now

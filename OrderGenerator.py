@@ -32,7 +32,8 @@ class OrderGenerator(sim.Component):
             self.hold(hold_time)
             
             for i in range(len(self.queues)):
-                order = Order(random_order_type, size, 0, 0, 1, self.env, self.reports[i])
+                deadline = max(DEADLINE_MIN, abs(int(sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample())))
+                order = Order(random_order_type, size, deadline, 0, 1, self.env, self.reports[i])
                 self.queues[i].add(order)
                 
                 for machine in self.machines[i]:
