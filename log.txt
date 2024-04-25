@@ -1,168 +1,25 @@
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 INFO:root:Printing DataFrame PS
 INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0      1980    2768.144123   2804.429614       36.285492        36.285492             1.0
-1        10      16.285572    108.772831       92.487259        92.487259             1.0
-2         5      10.608891     36.708463       26.099572        26.099572             1.0
-3         0       5.993872     39.445928       33.452055        33.452055             1.0
-4        20      30.232137     54.047090       23.814953        23.814953             1.0
+0        26     182.627842    188.214842        5.587000         5.587000             1.0
+1        25     176.325009    181.438159        5.113150         5.113150             1.0
+2        23     162.297846    166.870796        4.572950         4.572950             1.0
+3        10      72.689175     85.833746       13.144571        13.144571             1.0
+4         0       5.687260      6.992260        1.305000         1.305000             1.0
 ...     ...            ...           ...             ...              ...             ...
-4901  24890   34754.036430  35001.778925       34.823446              NaN             NaN
-4902  25045   34973.735100  35008.487703        2.366378              NaN             NaN
-4903  25055   34987.357312  35020.430665       30.618268              NaN             NaN
-4904  25060   34992.981219  35032.893180        9.014032              NaN             NaN
-4905  25020   34938.239338  35033.871076        7.822121              NaN             NaN
+1891   1929   13541.662653  13620.724831       45.425000              NaN             NaN
+1892   1928   13535.751859  13630.236482       29.893333              NaN             NaN
+1893   1930   13547.596841  13638.602362       14.590000              NaN             NaN
+1894   1937   13595.974052  13667.012485       28.619400              NaN             NaN
+1895   1938   13601.295527  13667.811248       32.369500              NaN             NaN
 
-[4906 rows x 6 columns]
-INFO:root:Printing DataFrame HRRN
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     13736   19197.081528  19198.486134        1.404606         1.404606             1.0
-1     24361   34022.260231  34027.429618        5.169387         5.169387             1.0
-2     11151   15568.345153  15570.666984        2.321831         2.321831             1.0
-3     11146   15560.773728  15564.734411        3.960683         3.960683             1.0
-4     13666   19102.044943  19108.853400        6.808458         6.808458             1.0
-...     ...            ...           ...             ...              ...             ...
-5001  25011   34924.047346  35007.822354        9.204983              NaN             NaN
-5002  25001   34910.595765  35028.683015       31.058245              NaN             NaN
-5003  25031   34952.559043  35030.191915       10.443857              NaN             NaN
-5004  24996   34900.823941  35045.422031       21.719474              NaN             NaN
-5005  24991   34893.696981  35050.847689        9.402183              NaN             NaN
-
-[5006 rows x 6 columns]
-INFO:root:Printing DataFrame SJF
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0         7      10.608891     36.708463       26.099572        26.099572             1.0
-1         2       5.993872     39.445928       33.452055        33.452055             1.0
-2        22      30.232137     54.047090       23.814953        23.814953             1.0
-3        12      16.285572    108.772831       92.487259        92.487259             1.0
-4        17      23.346718     32.255154        8.908436         8.908436             1.0
-...     ...            ...           ...             ...              ...             ...
-4781  25052   34980.078347  35002.869806       19.033984              NaN             NaN
-4782  24997   34900.823941  35008.155048       43.438948              NaN             NaN
-4783  25027   34945.170805  35008.995471        5.661507              NaN             NaN
-4784  25047   34973.735100  35009.462505        2.957973              NaN             NaN
-4785  25037   34959.667730  35022.333595       13.887265              NaN             NaN
-
-[4786 rows x 6 columns]
-INFO:root:Printing DataFrame FCFS
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0         8      10.608891     36.708463       26.099572        26.099572             1.0
-1         3       5.993872     39.445928       33.452055        33.452055             1.0
-2        23      30.232137     54.047090       23.814953        23.814953             1.0
-3        13      16.285572    108.772831       92.487259        92.487259             1.0
-4        18      23.346718     32.255154        8.908436         8.908436             1.0
-...     ...            ...           ...             ...              ...             ...
-4656  23268   32513.467721  34998.508699       23.144541              NaN             NaN
-4657  23283   32534.102406  35000.014754        3.275186              NaN             NaN
-4658  23298   32558.424109  35019.079559       41.300320              NaN             NaN
-4659  23288   32542.121025  35047.728640       46.384463              NaN             NaN
-4660  23303   32565.136525  35103.871837       52.555453              NaN             NaN
-
-[4661 rows x 6 columns]
-INFO:root:Printing DataFrame RR-7
-INFO:root:       Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0          4       5.993872      5.993872        4.512950              0.0             0.0
-1       3109    4353.214226   4353.214226       26.230333              0.0             0.0
-2        499     706.190803    706.190803       23.733000              0.0             0.0
-3       9444   13175.517926  13175.517926       14.588200              0.0             0.0
-4      23654   33059.136148  33059.136148        3.763250              0.0             0.0
-...      ...            ...           ...             ...              ...             ...
-12448  25064   34992.981219  34993.336069        0.354850              NaN             NaN
-12449  25064   34992.981219  34994.400619        1.774250              NaN             NaN
-12450  25064   34992.981219  34995.346886        4.139917              NaN             NaN
-12451  25059   34987.357312  35001.290319       12.463650              NaN             NaN
-12452  25069   35001.078666  35033.995969        2.917304              NaN             NaN
-
-[12453 rows x 6 columns]
-INFO:root:Printing DataFrame PS
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     38645   18972.335515  18974.089104        1.753588         1.753588             1.0
-1     43885   26280.072283  26282.648004        2.575721         2.575721             1.0
-2     31045    8317.838502   8318.565946        0.727444         0.727444             1.0
-3     39990   20847.346982  20852.207534        4.860551         4.860551             1.0
-4     44845   27618.024440  27620.148561        2.124121         2.124121             1.0
-...     ...            ...           ...             ...              ...             ...
-3984  45040   27894.309964  27911.875590       16.674526              NaN             NaN
-3985  44975   27807.993854  27923.074859       21.869810              NaN             NaN
-3986  44995   27833.827936  27926.996455        3.762618              NaN             NaN
-3987  45005   27848.128874  27932.422912       49.080221              NaN             NaN
-3988  45020   27869.547206  27936.278733       31.237051              NaN             NaN
-
-[3989 rows x 6 columns]
-INFO:root:Printing DataFrame HRRN
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     44821   27583.577801  27587.114862        3.537061         3.537061             1.0
-1     41516   22973.675108  22977.846234        4.171125         4.171125             1.0
-2     43911   26312.647431  26320.167362        7.519931         7.519931             1.0
-3     43916   26320.003570  26325.337528        5.333958         5.333958             1.0
-4     43941   26350.542214  26356.275558        5.733343         5.733343             1.0
-...     ...            ...           ...             ...              ...             ...
-3983  44996   27833.827936  27919.046087       18.813089              NaN             NaN
-3984  44991   27825.507320  27920.998260       30.493984              NaN             NaN
-3985  45011   27855.870167  27931.538380        7.186863              NaN             NaN
-3986  45001   27840.111865  27950.354883       20.651278              NaN             NaN
-3987  44981   27814.559950  27954.321823        8.341756              NaN             NaN
-
-[3988 rows x 6 columns]
-INFO:root:Printing DataFrame SJF
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     25387     450.029141    455.894396        5.865255         5.865255             1.0
-1     25287     311.962140    324.829874       12.867734        12.867734             1.0
-2     25297     325.693899    343.508827       17.814928        17.814928             1.0
-3     25402     472.257757    490.535627       18.277870        18.277870             1.0
-4     25382     443.535875    498.475632       54.939758        54.939758             1.0
-...     ...            ...           ...             ...              ...             ...
-3863  45012   27855.870167  27904.995398        3.593432              NaN             NaN
-3864  45017   27861.735497  27913.543012       10.719127              NaN             NaN
-3865  44972   27801.135201  27918.801493       36.834986              NaN             NaN
-3866  45032   27881.009004  27923.359117       12.228354              NaN             NaN
-3867  44982   27814.559950  27935.438931       41.708778              NaN             NaN
-
-[3868 rows x 6 columns]
-INFO:root:Printing DataFrame FCFS
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     25388     450.029141    455.894396        5.865255         5.865255             1.0
-1     25413     485.731837    495.725679        9.993842         9.993842             1.0
-2     25403     472.257757    490.535627       18.277870        18.277870             1.0
-3     25073       6.812158     16.008902        9.196744         9.196744             1.0
-4     25103      48.631836     51.852361        3.220525         3.220525             1.0
-...     ...            ...           ...             ...              ...             ...
-3788  44018   26449.995746  27933.695574        8.904898              NaN             NaN
-3789  44023   26455.373507  27946.139723       17.842923              NaN             NaN
-3790  43988   26407.761461  27965.391360       91.585854              NaN             NaN
-3791  44033   26470.013439  27975.532702       13.614732              NaN             NaN
-3792  44028   26462.644117  28007.256276       47.486335              NaN             NaN
-
-[3793 rows x 6 columns]
-INFO:root:Printing DataFrame RR-14
-INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0     25079      13.128838     13.128838        8.459000              0.0             0.0
-1     44144   26631.454039  26631.454039        8.973000              0.0             0.0
-2     39344   19952.041538  19952.041538       12.654500              0.0             0.0
-3     35119   14046.338672  14046.338672       22.456500              0.0             0.0
-4     33214   11362.058979  11362.058979       35.759000              0.0             0.0
-...     ...            ...           ...             ...              ...             ...
-6733  45044   27894.309964  27900.497963        8.337263              NaN             NaN
-6734  45049   27900.497963  27902.432963        1.935000              NaN             NaN
-6735  45039   27886.922083  27927.331963       30.859100              NaN             NaN
-6736  45049   27900.497963  27938.237963        9.675000              NaN             NaN
-6737  45054   27910.048463  27970.770855        0.722393              NaN             NaN
-
-[6738 rows x 6 columns]
+[1896 rows x 6 columns]

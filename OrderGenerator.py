@@ -21,8 +21,8 @@ class OrderGenerator(sim.Component):
         
         while Config.simulation_running and Config.gui_running:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
-            
-            size = sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample()
+            size = max(ORDER_MIN_SIZE, abs(int(sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample())))
+
             self.num_generated += 1
             self.hold(abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample()))
             
