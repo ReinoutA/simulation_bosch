@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Button
 from tkinter import simpledialog
+from tkinter import messagebox
 import tkinter.simpledialog as sd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -111,7 +112,12 @@ class Gui(Thread):
             Config.methods = []
             
             for name in self.selected_schedulers:
-                cls = globals()[name]
+                try:
+                    cls = globals()[name]
+                except KeyError:
+                    messagebox.showerror(f"ERROR: import {name} in  Config.py")
+                    continue
+
                 args = inspect.signature(cls.__init__).parameters
                 
                 if len(args) > 1:

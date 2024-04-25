@@ -6,15 +6,16 @@ from Schedulers.SJF import SJF
 from Schedulers.HRRN import HRRN
 from Schedulers.PS import PS
 from Schedulers.RR import RR
+from Schedulers.SDD import SDD
 
 TIME_LIMIT = 365
 
 # Logging parameters
 ENABLE_SIM_TRACE = False
-LOG_QUEUES = False
+LOG_QUEUES = True
 LOG_MACHINES = False
 LOG_GENERATOR = False
-LOG_DATAFRAMES =  True
+LOG_DATAFRAMES =  False
 
 # Generator parameters
 ORDER_SIZE_MEAN = 100000
@@ -22,6 +23,9 @@ ORDER_SIZE_STD = 50000
 ORDER_MIN_SIZE = 1000
 ORDER_INTERVAL_MEAN = 7
 ORDER_INTERVAL_STD = 1
+DEADLINE_MEAN = 15
+DEADLINE_STD = 600
+DEADLINE_MIN = 10
 
 # GUI parameters
 REFRESH_RATE = 10
