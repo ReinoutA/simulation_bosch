@@ -14,17 +14,22 @@ class OrderGenerator(sim.Component):
         self.machines = machines
         self.env = env
         self.reports = reports
-
+        self.total_hold_time = 0
+        
     def process(self):
         order_types = list(OrderType)
         order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
-        
+        total_hold_time = 0
         while Config.simulation_running and Config.gui_running:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
             size = max(ORDER_MIN_SIZE, abs(int(sim.Normal(ORDER_SIZE_MEAN, ORDER_SIZE_STD).sample())))
 
             self.num_generated += 1
-            self.hold(abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample()))
+            hold_time = abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample())
+            total_hold_time += hold_time
+            
+            #logging.info(total_hold_time)
+            self.hold(hold_time)
             
             for i in range(len(self.queues)):
                 order = Order(random_order_type, size, 0, 0, 1, self.env, self.reports[i])

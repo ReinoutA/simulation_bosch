@@ -8,7 +8,7 @@ import Machine
 class OrderGenerator(sim.Component):
     def process(self):
         print(env.now())
-        order_types = list(orderType)
+        order_types = list(OrderType)
         order_type_weights = [0.1, 0.3, 0.6]  # adjust these values to your needs
         while True:
             random_order_type = random.choices(order_types, weights=order_type_weights, k=1)[0]
