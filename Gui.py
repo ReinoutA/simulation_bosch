@@ -477,7 +477,7 @@ class Gui(Thread):
     def on_combo_change(self, event):
         new_options = []
         for f in self.options:
-            if f in self.selected_schedulers:
+            if f in self.selected_schedulers and not f.endswith('*'):
                 new_options.append(f"{f}*")
             else:
                 if f.endswith('*'):

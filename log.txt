@@ -1,0 +1,23 @@
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+INFO:root:Printing DataFrame FCFS
+INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
+0        15     110.513177    113.077377        2.564200         2.564200             1.0
+1         1      14.824396     49.408146       34.583750        34.583750             1.0
+2         0       9.458146     17.740946        8.282800         8.282800             1.0
+3         5      40.822615     42.205765        1.383150         1.383150             1.0
+4        26     193.025722    225.162055       32.136333        32.136333             1.0
+...     ...            ...           ...             ...              ...             ...
+2480   2484   17370.877364  18657.149129        2.836857              NaN             NaN
+2481   2460   17197.401200  18679.061222      150.180000              NaN             NaN
+2482   2483   17363.466773  18682.145115       29.352800              NaN             NaN
+2483   2482   17355.425515  18682.832646       33.463600              NaN             NaN
+2484   2481   17347.565850  18685.047557       14.152800              NaN             NaN
+
+[2485 rows x 6 columns]
