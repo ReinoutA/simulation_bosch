@@ -9,9 +9,16 @@ Verschillende scheduling algoritmes:
 
 Elementen die in de evaluatiefunctie kan zitten:
 -	Lateness
--	Tardiness
+-	Tardiness -> beter
 -	Grootte van de order : alle ruitenwissers binnen een order hebben zelfde type, en zoniet splitsen we ze op in meerdere orders
 -	Voorrang als er momenteel al een ruitenwisser van dat type bezig is (omschakeltijden worden zo misschien gereduceerd)
 
 
 Hoe omschakeltijd er in verwerken?
+
+
+STOCK ERIN VERWERKEN
+
+
+Verdeling: hoeveel opvoorhand wordt een order gestuurd voor de deadline?
+Verdeling: hoeveel orders en van welk type
