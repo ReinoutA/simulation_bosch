@@ -191,8 +191,8 @@ class Gui(Thread):
         
         tk.Label(dialog, text="Transition table:").grid(row=0, column=0)
         
-        tree = self.render_transition_table(dialog, configuration)
-        tree.grid(row=1, column=0, sticky='nsew')
+        transition_tree = self.render_transition_table(dialog, configuration)
+        transition_tree.grid(row=1, column=0, sticky='nsew')
         
         button_frame = tk.Frame(dialog)
         button_frame.grid(row=2, column=0, sticky='ew') 
@@ -200,9 +200,9 @@ class Gui(Thread):
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        tk.Button(button_frame, text="Add", command=lambda: self.add_transition_row(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
-        tk.Button(button_frame, text="Edit", command=lambda: self.edit_transition_row(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
-        tk.Button(button_frame, text="Remove ", command=lambda: self.remove_transition_row(dialog, configuration, tree)).grid(row=1, column=2, sticky='ew')
+        tk.Button(button_frame, text="Add", command=lambda: self.add_transition_row(dialog, configuration, transition_tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Edit", command=lambda: self.edit_transition_row(dialog, configuration, transition_tree)).grid(row=1, column=1, sticky='ew')
+        tk.Button(button_frame, text="Remove ", command=lambda: self.remove_transition_row(dialog, configuration, transition_tree)).grid(row=1, column=2, sticky='ew')
         
         #########################
         #     RUNTIME TABLE     #
@@ -210,9 +210,9 @@ class Gui(Thread):
         
         tk.Label(dialog, text="Runtime table:").grid(row=3, column=0)
         
-        tree = self.render_runtime_table(dialog, configuration)
-        tree.grid(row=4, column=0, sticky='nsew')
-        tk.Button(dialog, text="Edit", command=lambda: self.edit_runtime_row(dialog, configuration, tree)).grid(row=5, column=0, sticky='ew')
+        runtime_tree = self.render_runtime_table(dialog, configuration)
+        runtime_tree.grid(row=4, column=0, sticky='nsew')
+        tk.Button(dialog, text="Edit", command=lambda: self.edit_runtime_row(dialog, configuration, runtime_tree)).grid(row=5, column=0, sticky='ew')
         
         #########################
         #     ALLOWED TABLE     #
@@ -220,8 +220,8 @@ class Gui(Thread):
         
         tk.Label(dialog, text="Allowed order types:").grid(row=0, column=1)
         
-        tree = self.render_allowed_table(dialog, configuration)
-        tree.grid(row=1, column=1, sticky='nsew')
+        allowed_tree = self.render_allowed_table(dialog, configuration)
+        allowed_tree.grid(row=1, column=1, sticky='nsew')
         
         button_frame = tk.Frame(dialog)
         button_frame.grid(row=2, column=1, sticky='ew') 
@@ -229,8 +229,8 @@ class Gui(Thread):
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        tk.Button(button_frame, text="Add", command=lambda: self.add_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
-        tk.Button(button_frame, text="Remove", command=lambda: self.remove_can_do_list_row(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
+        tk.Button(button_frame, text="Add", command=lambda: self.add_can_do_list_row(dialog, configuration, allowed_tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Remove", command=lambda: self.remove_can_do_list_row(dialog, configuration, allowed_tree)).grid(row=1, column=1, sticky='ew')
         
         #########################
         #     PRIORITY QUEUE    #
@@ -238,8 +238,8 @@ class Gui(Thread):
         
         tk.Label(dialog, text="Allowed order types:").grid(row=3, column=1)
         
-        tree = self.render_priority_list(dialog, configuration)
-        tree.grid(row=4, column=1, sticky='nsew')
+        priority_tree = self.render_priority_list(dialog, configuration)
+        priority_tree.grid(row=4, column=1, sticky='nsew')
         
         button_frame = tk.Frame(dialog)
         button_frame.grid(row=5, column=1, sticky='ew') 
@@ -247,8 +247,8 @@ class Gui(Thread):
         button_frame.grid_columnconfigure(0, weight=1)
         button_frame.grid_columnconfigure(1, weight=1)
 
-        tk.Button(button_frame, text="Up", command=lambda: self.higher_priority(dialog, configuration, tree)).grid(row=1, column=0, sticky='ew')
-        tk.Button(button_frame, text="Down", command=lambda: self.lower_priority(dialog, configuration, tree)).grid(row=1, column=1, sticky='ew')
+        tk.Button(button_frame, text="Up", command=lambda: self.higher_priority(dialog, configuration, priority_tree)).grid(row=1, column=0, sticky='ew')
+        tk.Button(button_frame, text="Down", command=lambda: self.lower_priority(dialog, configuration, priority_tree)).grid(row=1, column=1, sticky='ew')
         
         tk.Button(dialog, text="Close", command=dialog.destroy).grid(row=6, column=0, sticky='ew')
     
@@ -347,19 +347,20 @@ class Gui(Thread):
         dialog.title("Edit runtime entry")
         dialog.grab_set()
 
+        selected_item = tree.selection()
+        if not selected_item:
+            print(selected_item)
+            return  # No item is selected
+        
         tk.Label(dialog, text="Enter the new runtime value:").grid(row=0, column=0)
         cost_entry = tk.Entry(dialog)
         cost_entry.grid(row=1, column=0)
-
-        selected_item = tree.selection()
-        if not selected_item:
-            return  # No item is selected
 
         values = tree.item(selected_item[0], 'values')
         tk.Button(dialog, text="OK", command=lambda: self.edit_runtime(old_dialog, dialog, configuration, order_type_map[values[0]], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
     
     def edit_runtime(self, old_dialog, dialog, configuration, type, cost, tree):
-        self.remove_runtime_row(configuration, tree)
+        self.remove_runtime_row(old_dialog, configuration, tree)
         configuration.runtime[type] = cost
         
         tree.insert('', 'end', values=(type.name, cost))
