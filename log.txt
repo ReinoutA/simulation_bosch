@@ -6,18 +6,20 @@ ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
 ERROR:root:Reports index out of range
 WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
-INFO:root:Printing DataFrame FCFS
+ERROR:root:Reports index out of range
+WARNING:matplotlib.legend:No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
+INFO:root:Printing DataFrame PS
 INFO:root:      Order  Starting time      End time  Execution time  Turnaround time  Response ratio
-0        15     110.513177    113.077377        2.564200         2.564200             1.0
-1         1      14.824396     49.408146       34.583750        34.583750             1.0
-2         0       9.458146     17.740946        8.282800         8.282800             1.0
-3         5      40.822615     42.205765        1.383150         1.383150             1.0
-4        26     193.025722    225.162055       32.136333        32.136333             1.0
+0        26     182.627842    188.214842        5.587000         5.587000             1.0
+1        25     176.325009    181.438159        5.113150         5.113150             1.0
+2        23     162.297846    166.870796        4.572950         4.572950             1.0
+3        10      72.689175     85.833746       13.144571        13.144571             1.0
+4         0       5.687260      6.992260        1.305000         1.305000             1.0
 ...     ...            ...           ...             ...              ...             ...
-2480   2484   17370.877364  18657.149129        2.836857              NaN             NaN
-2481   2460   17197.401200  18679.061222      150.180000              NaN             NaN
-2482   2483   17363.466773  18682.145115       29.352800              NaN             NaN
-2483   2482   17355.425515  18682.832646       33.463600              NaN             NaN
-2484   2481   17347.565850  18685.047557       14.152800              NaN             NaN
+1891   1929   13541.662653  13620.724831       45.425000              NaN             NaN
+1892   1928   13535.751859  13630.236482       29.893333              NaN             NaN
+1893   1930   13547.596841  13638.602362       14.590000              NaN             NaN
+1894   1937   13595.974052  13667.012485       28.619400              NaN             NaN
+1895   1938   13601.295527  13667.811248       32.369500              NaN             NaN
 
-[2485 rows x 6 columns]
+[1896 rows x 6 columns]
