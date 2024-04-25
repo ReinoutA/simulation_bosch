@@ -7,6 +7,7 @@ from Schedulers.HRRN import HRRN
 from Schedulers.PS import PS
 from Schedulers.RR import RR
 from Schedulers.SDD import SDD
+from Schedulers.CR import CR
 
 TIME_LIMIT = 365
 
