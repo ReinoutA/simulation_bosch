@@ -23,7 +23,7 @@ class Machine(sim.Component):
             if len(self.queue) == 0:
                 self.passivate()
                 
-            order, profit = self.method.schedule_next(self)
+            order, num_processed = self.method.schedule_next(self)
             
             if order is not None:
                 if order.type not in self.configuration.can_do_list:
@@ -39,13 +39,16 @@ class Machine(sim.Component):
                     self.hold(transition_time)
 
                 self.last_order_type = order.type
-                self.total_profit += profit
+                self.total_profit += int(order.profit * num_processed / order.size)
                 execution_time = self.get_execution_time(order)
                 self.total_execution_time += execution_time
                 self.hold(execution_time)
-                order.end_time = self.env.now()
+                now = self.env.now()
+                if 1 - (num_processed / order.size) < 0.05:
+                    order.end_time = now
+                order.size -= num_processed
                 order.execution_time += execution_time
-                order.create_report()
+                order.create_report(num_processed, now)
                 
     def get_transition_time(self, order):
         return self.configuration.transitions.get((self.last_order_type, order.type), 0)

@@ -7,22 +7,26 @@ class RR(Method):
         self.window_size = int(window_size)
         
     def schedule_next(self, machine):
-        profit = 0
+        num_processed = 0
         if len(machine.queue) > 0:
             order = machine.queue[0]
             machine.queue.remove(order)
-        
+            
             execution_time = machine.get_execution_time(order)
             if execution_time > self.window_size:
                 left_over = int((execution_time - self.window_size) * machine.configuration.runtime[order.type])
-                profit = order.profit * (1 - (left_over / order.size))
-                order.size = left_over
-                machine.queue.add(order)
+                num_processed = order.size * (1 - (left_over / order.size))
+                
+                if 1 - (num_processed / order.size) < 0.05:
+                    machine.queue.add(order)
+                    order.size = left_over
+                else:
+                    num_processed = order.size
                 
                 for machine in machine.machines:
                     if machine.status() != 'passive':
                         machine.activate()
                         
-            return order, profit
+            return order, int(num_processed)
         else:
             return None, 0

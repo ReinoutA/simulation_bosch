@@ -18,10 +18,6 @@ from Config import *
 import Config
 from Simulation import Simulation
 
-order_type_map = {e.name: e for e in OrderType}
-order_types = [e for e in OrderType]
-order_type_names = [type.name for type in order_types]
-
 class Gui(Thread):
     def __init__(self,):
         super().__init__()
@@ -89,17 +85,17 @@ class Gui(Thread):
             self.ax_rr.clear()
             self.ax_tn.clear()
             
+            lines_tn = []
+            
             for i in range(len(Config.methods)):
                 if i < len(self.reports):
-                    self.reports[i].draw(Config.methods[i].name, self.ax_rr, self.ax_tn, self.fig, None)
+                    lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_rr, self.ax_tn, self.fig, None, lines_tn)
                 else:
                     logging.error("Reports index out of range")
 
-            self.ax_rr.set_xlim([0, 100])
-            self.ax_rr.set_title("Response ratio")
-
-            self.ax_rr.set_xlabel("% of orders")
-            self.ax_rr.set_ylabel("Response ratio")
+            self.ax_rr.set_title("Stock")
+            self.ax_rr.set_xlabel("time")
+            self.ax_rr.set_ylabel("Stock")
             self.ax_rr.grid()
 
             self.ax_tn.set_xlim([0, 100])
@@ -109,6 +105,7 @@ class Gui(Thread):
             self.ax_tn.set_ylabel("Lateness")
             self.ax_tn.grid()
 
+            self.fig.legend(handles=lines_tn, loc='upper right')
             # self.fig.legend(handles=[self.line_rr, self.line_tn], loc='upper right')
             self.canvas.draw()
     
@@ -290,17 +287,17 @@ class Gui(Thread):
         dialog.grab_set()
 
         selected_type1_name = tk.StringVar(dialog)
-        selected_type1_name.set(order_type_names[0])
-        type_menu = tk.OptionMenu(dialog, selected_type1_name, *order_type_names)
+        selected_type1_name.set(Config.order_type_names[0])
+        type_menu = tk.OptionMenu(dialog, selected_type1_name, *Config.order_type_names)
         type_menu.grid(row=0, column=0)
         selected_type2_name = tk.StringVar(dialog)
-        selected_type2_name.set(order_type_names[0])
-        type_menu = tk.OptionMenu(dialog, selected_type2_name, *order_type_names)
+        selected_type2_name.set(Config.order_type_names[0])
+        type_menu = tk.OptionMenu(dialog, selected_type2_name, *Config.order_type_names)
         type_menu.grid(row=0, column=1)
         cost_entry = tk.Entry(dialog)
         cost_entry.grid(row=0, column=2)
 
-        tk.Button(dialog, text="OK", command=lambda: self.add_transition(old_dialog, dialog, configuration, order_type_map[selected_type1_name.get()], order_type_map[selected_type2_name.get()], int(cost_entry.get()), tree)).grid(row=1, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.add_transition(old_dialog, dialog, configuration, Config.order_type_map[selected_type1_name.get()], Config.order_type_map[selected_type2_name.get()], int(cost_entry.get()), tree)).grid(row=1, column=0, columnspan=3)
 
     def add_transition(self, old_dialog, dialog, configuration, from_value, to_value, cost, tree):
         configuration.transitions[(from_value, to_value)] = cost
@@ -324,7 +321,7 @@ class Gui(Thread):
         values = tree.item(selected_item[0], 'values')
         from_value, to_value, _ = values
 
-        tk.Button(dialog, text="OK", command=lambda: self.edit_transition(old_dialog, dialog, configuration, order_type_map[from_value], order_type_map[to_value], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.edit_transition(old_dialog, dialog, configuration, Config.order_type_map[from_value], Config.order_type_map[to_value], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
     
     def edit_transition(self, old_dialog, dialog, configuration, from_value, to_value, cost, tree):
         self.remove_transition_row(configuration, tree)
@@ -342,7 +339,7 @@ class Gui(Thread):
         values = tree.item(selected_item[0], 'values')
         from_value, to_value, cost = values
 
-        self.remove_transition(old_dialog, configuration, order_type_map[from_value], order_type_map[to_value], tree)
+        self.remove_transition(old_dialog, configuration, Config.order_type_map[from_value], Config.order_type_map[to_value], tree)
 
     def remove_transition(self, old_dialog, configuration, from_value, to_value, tree):
         del configuration.transitions[(from_value, to_value)]
@@ -378,7 +375,7 @@ class Gui(Thread):
         cost_entry.grid(row=1, column=0)
 
         values = tree.item(selected_item[0], 'values')
-        tk.Button(dialog, text="OK", command=lambda: self.edit_runtime(old_dialog, dialog, configuration, order_type_map[values[0]], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.edit_runtime(old_dialog, dialog, configuration, Config.order_type_map[values[0]], int(cost_entry.get()), tree)).grid(row=2, column=0, columnspan=3)
     
     def edit_runtime(self, old_dialog, dialog, configuration, type, cost, tree):
         self.remove_runtime_row(old_dialog, configuration, tree)
@@ -394,7 +391,7 @@ class Gui(Thread):
             return  # No item is selected
 
         values = tree.item(selected_item[0], 'values')
-        self.remove_runtime(old_dialog, configuration, order_type_map[values[0]], tree)
+        self.remove_runtime(old_dialog, configuration, Config.order_type_map[values[0]], tree)
 
     def remove_runtime(self, old_dialog, configuration, type, tree):
         # Remove the transition from the configuration
@@ -426,12 +423,12 @@ class Gui(Thread):
         tk.Label(dialog, text="Choose the new order type:").grid(row=0, column=0)
 
         selected_type_name = tk.StringVar(dialog)
-        selected_type_name.set(order_type_names[0])
+        selected_type_name.set(Config.order_type_names[0])
 
-        type_menu = tk.OptionMenu(dialog, selected_type_name, *order_type_names)
+        type_menu = tk.OptionMenu(dialog, selected_type_name, *Config.order_type_names)
         type_menu.grid(row=1, column=0)
 
-        tk.Button(dialog, text="OK", command=lambda: self.add_can_do_list(old_dialog, dialog, configuration, order_type_map[selected_type_name.get()], tree)).grid(row=2, column=0, columnspan=3)
+        tk.Button(dialog, text="OK", command=lambda: self.add_can_do_list(old_dialog, dialog, configuration, Config.order_type_map[selected_type_name.get()], tree)).grid(row=2, column=0, columnspan=3)
 
     def add_can_do_list(self, old_dialog, dialog, configuration, type, tree):
         runtime_val = int(simpledialog.askinteger("Input", "Enter the runtime value"))
@@ -448,7 +445,7 @@ class Gui(Thread):
 
         type = tree.item(selected_item[0], 'values')
 
-        self.remove_can_do_list(old_dialog, configuration, order_type_map[type[0]], tree)
+        self.remove_can_do_list(old_dialog, configuration, Config.order_type_map[type[0]], tree)
 
     def remove_can_do_list(self, old_dialog, configuration, type, tree):
         configuration.remove_type(type)

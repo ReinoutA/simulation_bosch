@@ -136,3 +136,7 @@ priority_lists = [
 configurations = []
 for i in range(5):
     configurations.append(Configuration(transitions[i], runtimes[i], can_do_lists[i], priority_lists[i]))
+    
+order_type_map = {e.name: e for e in OrderType}
+order_types = [e for e in OrderType]
+order_type_names = [type.name for type in order_types]

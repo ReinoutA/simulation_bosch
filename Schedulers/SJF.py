@@ -15,6 +15,6 @@ class SJF(Method):
                 
         if order is not None:
             machine.queue.remove(order)
-            return order, order.profit
+            return order, order.size
         else:
             return None, 0
