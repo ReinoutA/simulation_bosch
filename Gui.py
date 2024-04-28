@@ -52,9 +52,6 @@ class Gui(Thread):
         self.combo.grid(row=0, column=1)
         self.selected_schedulers = []
         
-        # self.option_menu = tk.OptionMenu(self.root, self.selected_option, *self.options)
-        # self.option_menu.grid(row=0, column=1)
-        
         add_scheduler_button = Button(button_frame, text="Add scheduler", command=self.add_scheduler)
         add_scheduler_button.grid(row=0, column=0, sticky='ew')
         
@@ -70,8 +67,9 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
         stop_simulation_button.grid(row=4, column=0, sticky='ew')
 
-        self.fig = Figure(figsize=(5, 5))
-        self.ax = self.fig.add_subplot(111)
+        self.fig = Figure(figsize=(10, 5))
+        self.ax_rr = self.fig.add_subplot(121)
+        self.ax_tn = self.fig.add_subplot(122)
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         self.canvas.draw()
@@ -88,22 +86,30 @@ class Gui(Thread):
         
     def draw_plot(self):
         while Config.simulation_running:
-            self.ax.clear()
+            self.ax_rr.clear()
+            self.ax_tn.clear()
             
             for i in range(len(Config.methods)):
                 if i < len(self.reports):
-                    self.reports[i].draw(Config.methods[i].name, self.ax, None)
+                    self.reports[i].draw(Config.methods[i].name, self.ax_rr, self.ax_tn, self.fig, None)
                 else:
                     logging.error("Reports index out of range")
 
-            self.ax.set_xlim([0, 100])
-            self.ax.set_title("Response ratio")
+            self.ax_rr.set_xlim([0, 100])
+            self.ax_rr.set_title("Response ratio")
 
-            self.ax.set_xlabel("% of orders")
-            self.ax.set_ylabel("Response ratio")
+            self.ax_rr.set_xlabel("% of orders")
+            self.ax_rr.set_ylabel("Response ratio")
+            self.ax_rr.grid()
 
-            self.ax.legend()
-            self.ax.grid()
+            self.ax_tn.set_xlim([0, 100])
+            self.ax_tn.set_title("Lateness")
+
+            self.ax_tn.set_xlabel("% of orders")
+            self.ax_tn.set_ylabel("Lateness")
+            self.ax_tn.grid()
+
+            # self.fig.legend(handles=[self.line_rr, self.line_tn], loc='upper right')
             self.canvas.draw()
     
     def start_simulation(self):
@@ -115,8 +121,8 @@ class Gui(Thread):
                 try:
                     cls = globals()[name]
                 except KeyError:
-                    messagebox.showerror(f"ERROR: import {name} in  Config.py")
-                    continue
+                    messagebox.showerror("ERROR", f"import {name} in  Config.py")
+                    return
 
                 args = inspect.signature(cls.__init__).parameters
                 
@@ -142,7 +148,8 @@ class Gui(Thread):
     def stop_simulation(self):
         if Config.simulation_running:
             Config.simulation_running = False
-            self.ax.clear()
+            self.ax_rr.clear()
+            self.ax_tn.clear()
             self.canvas.draw()
             
     def add_scheduler(self):
