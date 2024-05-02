@@ -24,4 +24,27 @@ Verdeling: hoeveel opvoorhand wordt een order gestuurd voor de deadline?
 Verdeling: hoeveel orders en van welk type
 
 
-Critical Ratio (CR): Dit algoritme berekent de verhouding tussen de resterende tijd tot de deadline en de verwerkingstijd van een taak. Taken worden vervolgens gesorteerd op basis van deze verhouding, waarbij taken met de laagste ratio voorrang krijgen. Dit helpt bij het minimaliseren van de vertraging in verhouding tot de resterende tijd.
+Naast schedulingalgoritmes en gewoon produceren wat de order zegt, opvoorhand produceren en in de stock steken. 
+
+Te vroeg produceren is misschien ook niet goed want dit heeft invloed op de stock
+
+Meerdere grafieken:
+- Response Ratio zegt niets nuttig
+- Totale Tardiness
+- Stock
+- Aantal orders
+- Tijd verspild door omschakelingen
+
+In hun stock passen er 4 miljoen stuks
+
+
+Omschakelen 30 min -> 2u 30
+
+
+25 min voor dat andere
+
+Inspiratie 2mei:
+- Als het huidige type dat draait op de machine verschillend is van het order dat je nu start, tijd tussen 30min en 2u 30 erbij optellen
+- Bepaalde machines restricten tot bepaalde types
+- Bijhouden hoelang elke machine niet draait : uptime per machine op userinterface
+- Omschakeltijd is geen nuttige tijd
