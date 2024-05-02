@@ -32,17 +32,3 @@ ERROR:root:Reports index out of range
 ERROR:root:Reports index out of range
 ERROR:root:Reports index out of range
 ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range
-ERROR:root:Reports index out of range

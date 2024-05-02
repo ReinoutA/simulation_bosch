@@ -8,7 +8,7 @@ from Schedulers.PS import PS
 from Schedulers.RR import RR
 from Schedulers.SDD import SDD
 from Schedulers.CR import CR
-
+import numpy as np
 TIME_LIMIT = 365
 
 # Logging parameters
@@ -30,62 +30,63 @@ DEADLINE_MIN = 10
 
 # GUI parameters
 REFRESH_RATE = 10
-
+shape_param = 4  # Vormparameter (kan worden aangepast)
+scale_param = 14  # Schaalparameter (kan worden aangepast)
 transitions = [
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : int(np.random.gamma(shape_param, scale_param)),
     },
 ]
 
