@@ -51,7 +51,9 @@ class Machine(sim.Component):
                 order.create_report(num_processed, now)
                 
     def get_transition_time(self, order):
-        return self.configuration.transitions.get((self.last_order_type, order.type), 0)
+        if self.last_order_type == order.type:
+            return 0
+        return self.configuration.transitions.get((self.last_order_type, order.type), 0).sample()
     
     def get_execution_time(self, order):
         return order.size / self.configuration.runtime[order.type]

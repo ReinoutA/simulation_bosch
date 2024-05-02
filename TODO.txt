@@ -38,7 +38,7 @@ Meerdere grafieken:
 In hun stock passen er 4 miljoen stuks
 
 
-Omschakelen 30 min -> 2u 30
+Omschakelen 30 min -> 2u 30 : omschakeling rubber
 
 
 25 min voor dat andere
@@ -48,3 +48,4 @@ Inspiratie 2mei:
 - Bepaalde machines restricten tot bepaalde types
 - Bijhouden hoelang elke machine niet draait : uptime per machine op userinterface
 - Omschakeltijd is geen nuttige tijd
+- X procent kans dat een machine uitvalt voor Y uur

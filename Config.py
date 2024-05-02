@@ -8,6 +8,8 @@ from Schedulers.PS import PS
 from Schedulers.RR import RR
 from Schedulers.SDD import SDD
 from Schedulers.CR import CR
+import numpy as np
+import salabim as sim
 
 TIME_LIMIT = 365
 
@@ -19,101 +21,102 @@ LOG_GENERATOR = False
 LOG_DATAFRAMES =  False
 
 # Generator parameters
-ORDER_SIZE_MEAN = 100000
-ORDER_SIZE_STD = 50000
+ORDER_SIZE_MEAN = 10000
+ORDER_SIZE_STD = 5000
 ORDER_MIN_SIZE = 1000
-ORDER_INTERVAL_MEAN = 7
-ORDER_INTERVAL_STD = 2
+ORDER_INTERVAL_MEAN = 10000
+ORDER_INTERVAL_STD = 3000
 DEADLINE_MEAN = 20
 DEADLINE_STD = 30
 DEADLINE_MIN = 10
 
 # GUI parameters
 REFRESH_RATE = 10
-
+shape_param = 4  # Vormparameter (kan worden aangepast)
+scale_param = 14  # Schaalparameter (kan worden aangepast)
 transitions = [
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
     },
     {
         (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : 30,
+        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
         (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : 60,
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : 30,
-    },
+        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
+        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
+    }
 ]
 
 runtimes = [
     {
-        OrderType.HIGH_QUALITY : 3000,
-        OrderType.MEDIUM_QUALITY : 5000,
-        OrderType.LOW_QUALITY : 10000,
+        OrderType.HIGH_QUALITY : 150,
+        OrderType.MEDIUM_QUALITY : 300,
+        OrderType.LOW_QUALITY : 500,
     },
     {
-        OrderType.HIGH_QUALITY : 2000,
-        OrderType.MEDIUM_QUALITY : 4000,
-        OrderType.LOW_QUALITY : 5000,
+        OrderType.HIGH_QUALITY : 100,
+        OrderType.MEDIUM_QUALITY : 200,
+        OrderType.LOW_QUALITY : 250,
     },
     {
-        OrderType.HIGH_QUALITY : 1000,
-        OrderType.MEDIUM_QUALITY : 2000,
-        OrderType.LOW_QUALITY : 3000,
+        OrderType.HIGH_QUALITY : 200,
+        OrderType.MEDIUM_QUALITY : 200,
+        OrderType.LOW_QUALITY : 200,
     },
     {
-        OrderType.HIGH_QUALITY : 10000,
-        OrderType.MEDIUM_QUALITY : 20000,
-        OrderType.LOW_QUALITY : 20000,
+        OrderType.HIGH_QUALITY : 100,
+        OrderType.MEDIUM_QUALITY : 200,
+        OrderType.LOW_QUALITY : 500,
     },
     {
-        OrderType.HIGH_QUALITY : 3000,
-        OrderType.MEDIUM_QUALITY : 5000,
-        OrderType.LOW_QUALITY : 7000,
+        OrderType.HIGH_QUALITY : 300,
+        OrderType.MEDIUM_QUALITY : 500,
+        OrderType.LOW_QUALITY : 700,
     },
 ]
 

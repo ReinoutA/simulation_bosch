@@ -31,7 +31,6 @@ class DataReport:
             order.is_in_stock = True
             self.update_queue.append(order)
         
-        
         for o in self.update_queue:
             if now >= o.deadline:
                 if order.is_in_stock:
@@ -69,7 +68,7 @@ class DataReport:
 
             # ax_rr.set_yscale('log')
 
-            self.df["Lateness"] = self.df["End time"] - self.df["Deadline"]
+            self.df["Lateness"] = (self.df["End time"] - self.df["Deadline"]).clip(lower=0)
             if self.df is not None:
                 self.df.sort_values("Lateness", inplace=True)
                 self.df = self.df.reset_index(drop=True)
