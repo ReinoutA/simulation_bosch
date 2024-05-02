@@ -39,32 +39,38 @@ class Gui(Thread):
         self.options = [os.path.basename(f)[:-3] for f in self.options]
         self.options = [f for f in self.options if f != 'Method']
     
-        self.selected_option = tk.StringVar(self.root)
-        self.selected_option.set(self.options[0])
+        self.selected_scheduling = tk.StringVar(self.root)
+        self.selected_scheduling.set(self.options[0])
         
-        self.combo = ttk.Combobox(self.root, textvariable=self.selected_option, state="readonly")
+        self.combo = ttk.Combobox(self.root, textvariable=self.selected_scheduling, state="readonly")
         self.combo['values'] = self.options
         self.combo.bind('<<ComboboxSelected>>', self.on_combo_change)
         self.combo.grid(row=0, column=1)
         self.selected_schedulers = []
         
+        self.selected_type = tk.StringVar(button_frame)
+        self.selected_type.set(order_type_names[0])
+
+        option_menu = tk.OptionMenu(button_frame, self.selected_type, *order_type_names)
+        option_menu.grid(row=0, column=0)
+
         add_scheduler_button = Button(button_frame, text="Add scheduler", command=self.add_scheduler)
-        add_scheduler_button.grid(row=0, column=0, sticky='ew')
+        add_scheduler_button.grid(row=1, column=0, sticky='ew')
         
         remove_scheduler_button = Button(button_frame, text="Remove scheduler", command=self.remove_scheduler)
-        remove_scheduler_button.grid(row=1, column=0, sticky='ew')
+        remove_scheduler_button.grid(row=2, column=0, sticky='ew')
 
         start_simulation_button = Button(button_frame, text="Start simulation", command=self.start_simulation)
-        start_simulation_button.grid(row=2, column=0, sticky='ew')
+        start_simulation_button.grid(row=3, column=0, sticky='ew')
 
         stop_simulation_button = Button(button_frame, text="Stop simulation", command=self.stop_simulation)
-        stop_simulation_button.grid(row=3, column=0, sticky='ew')
+        stop_simulation_button.grid(row=4, column=0, sticky='ew')
         
         stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
-        stop_simulation_button.grid(row=4, column=0, sticky='ew')
+        stop_simulation_button.grid(row=5, column=0, sticky='ew')
 
         self.fig = Figure(figsize=(10, 5))
-        self.ax_rr = self.fig.add_subplot(121)
+        self.ax_stock = self.fig.add_subplot(121)
         self.ax_tn = self.fig.add_subplot(122)
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
@@ -82,21 +88,21 @@ class Gui(Thread):
         
     def draw_plot(self):
         while Config.simulation_running:
-            self.ax_rr.clear()
+            self.ax_stock.clear()
             self.ax_tn.clear()
             
             lines_tn = []
             
             for i in range(len(Config.methods)):
                 if i < len(self.reports):
-                    lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_rr, self.ax_tn, self.fig, None, lines_tn)
+                    lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None, lines_tn, order_type_map[self.selected_type.get()])
                 else:
                     logging.error("Reports index out of range")
 
-            self.ax_rr.set_title("Stock")
-            self.ax_rr.set_xlabel("time")
-            self.ax_rr.set_ylabel("Stock")
-            self.ax_rr.grid()
+            self.ax_stock.set_title("Stock")
+            self.ax_stock.set_xlabel("time")
+            self.ax_stock.set_ylabel("Stock")
+            self.ax_stock.grid()
 
             self.ax_tn.set_xlim([0, 100])
             self.ax_tn.set_title("Lateness")
@@ -150,16 +156,17 @@ class Gui(Thread):
             self.canvas.draw()
             
     def add_scheduler(self):
-        if self.selected_option.get() not in self.selected_schedulers:
-            self.selected_schedulers.append(self.selected_option.get())
-            self.selected_option.set(self.selected_option.get() + "*")
+        selected = self.selected_scheduling.get()
+        if not selected.endswith("*"):
+            self.selected_schedulers.append(self.selected_scheduling.get())
+            self.selected_scheduling.set(self.selected_scheduling.get() + "*")
             self.on_combo_change(None)
     
     def remove_scheduler(self):
-        selected = self.selected_option.get()[:-1]
+        selected = self.selected_scheduling.get()[:-1]
         if selected in self.selected_schedulers:
             self.selected_schedulers.remove(selected)
-            self.selected_option.set(selected)
+            self.selected_scheduling.set(selected)
             self.on_combo_change(None)
             
     def configuration_menu(self):

@@ -27,13 +27,10 @@ class DataReport:
         stock = self.stock[order.type]
         new_val = stock[len(stock) - 1]
         if now < order.deadline:
-            # print(new_val, num_processed)
             new_val += num_processed
-            # print(f"new_val = {new_val}")
             order.is_in_stock = True
             self.update_queue.append(order)
         
-        # print(f"before update = {new_val}")
         
         for o in self.update_queue:
             if now >= o.deadline:
@@ -41,12 +38,11 @@ class DataReport:
                     new_val -= order.original_size
                 self.update_queue.remove(o)
         
-        # print(f"append = {new_val}")
         stock.append(new_val)
         logging.info(f"Appending DataFrame {self.name}")
         self.mutex.release()
         
-    def draw(self, name, ax_rr, ax_tn, fig, color, lines_tn):
+    def draw(self, name, ax_stock, ax_tn, color, lines_tn, selected_type):
         if not Config.gui_running:
             logging.error(f"Gui running is False")
             return
@@ -63,15 +59,13 @@ class DataReport:
                 self.df = self.df.reset_index(drop=True)
                 x_values = np.linspace(0, 100, len(self.df)) 
             
-            line_rr = None
-
             if color is not None:
                 # line_rr = ax_rr.plot(x_values, self.df["Response ratio"], label=name, color=color)[0]
-                ax_rr.plot(self.stock[OrderType.LOW_QUALITY], label=name, color=color)[0]
-                ax_rr.set_xlim([0, len(self.stock[OrderType.LOW_QUALITY])])
+                ax_stock.plot(self.stock[selected_type], label=name, color=color)[0]
+                ax_stock.set_xlim([0, len(self.stock[OrderType.LOW_QUALITY])])
             else:
                 # line_rr = ax_rr.plot(x_values, self.df["Response ratio"], label=name)[0]
-                ax_rr.plot(self.stock[OrderType.LOW_QUALITY], label=name)[0]
+                ax_stock.plot(self.stock[selected_type], label=name)[0]
 
             # ax_rr.set_yscale('log')
 
