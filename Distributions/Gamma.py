@@ -27,7 +27,7 @@ def plot_gamma_distribution(shape, scale, xmin=30, xmax=150, num_points=1000):
 
 # Parameters voor de gamma verdeling
 shape_param = 4  # Vormparameter (kan worden aangepast)
-scale_param = 10  # Schaalparameter (kan worden aangepast)
+scale_param = 14  # Schaalparameter (kan worden aangepast)
 
 # Plot de gamma verdeling
 plot_gamma_distribution(shape_param, scale_param)
