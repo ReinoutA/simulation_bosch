@@ -94,29 +94,29 @@ transitions = [
 
 runtimes = [
     {
-        OrderType.HIGH_QUALITY : 150,
-        OrderType.MEDIUM_QUALITY : 300,
-        OrderType.LOW_QUALITY : 500,
-    },
-    {
-        OrderType.HIGH_QUALITY : 100,
-        OrderType.MEDIUM_QUALITY : 200,
-        OrderType.LOW_QUALITY : 250,
+        OrderType.HIGH_QUALITY : 300,
+        OrderType.MEDIUM_QUALITY : 600,
+        OrderType.LOW_QUALITY : 1000,
     },
     {
         OrderType.HIGH_QUALITY : 200,
-        OrderType.MEDIUM_QUALITY : 200,
-        OrderType.LOW_QUALITY : 200,
-    },
-    {
-        OrderType.HIGH_QUALITY : 100,
-        OrderType.MEDIUM_QUALITY : 200,
+        OrderType.MEDIUM_QUALITY : 400,
         OrderType.LOW_QUALITY : 500,
     },
     {
-        OrderType.HIGH_QUALITY : 300,
-        OrderType.MEDIUM_QUALITY : 500,
-        OrderType.LOW_QUALITY : 700,
+        OrderType.HIGH_QUALITY : 400,
+        OrderType.MEDIUM_QUALITY : 400,
+        OrderType.LOW_QUALITY : 400,
+    },
+    {
+        OrderType.HIGH_QUALITY : 200,
+        OrderType.MEDIUM_QUALITY : 400,
+        OrderType.LOW_QUALITY : 1000,
+    },
+    {
+        OrderType.HIGH_QUALITY : 600,
+        OrderType.MEDIUM_QUALITY : 1000,
+        OrderType.LOW_QUALITY : 1400,
     },
 ]
 
