@@ -34,63 +34,6 @@ DEADLINE_MIN = 10
 REFRESH_RATE = 10
 shape_param = 4  # Vormparameter (kan worden aangepast)
 scale_param = 14  # Schaalparameter (kan worden aangepast)
-transitions = [
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    }
-]
 
 runtimes = [
     {
