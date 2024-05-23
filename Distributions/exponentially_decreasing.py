@@ -16,24 +16,16 @@ extra_point = np.array([0.99])  # This point is close to 1
 data = np.concatenate((data, extra_point))
 
 # Plotting the histogram of the data
-counts, bins, patches = plt.hist(data, bins=50, density=True, alpha=0.6, color='g')
+counts, bins, patches = plt.hist(data, bins=50, density=True, alpha=0.6, color='r')
 
 # Calculate the bin widths
 bin_width = bins[1] - bins[0]
 
-# Convert density values to percentages
-counts_percentage = counts * bin_width * 100
-
-# Plotting the histogram again with the adjusted y-values
-bin_centers = 0.5 * (bins[1:] + bins[:-1])
-
-# Create a bar plot with adjusted percentages
-for count, x in zip(counts_percentage, bin_centers):
-    plt.bar(x, count, width=bin_width, alpha=0.6, color='g', edgecolor='black')
-
 # Generating the theoretical PDF values within the range 0 to 1
 x = np.linspace(0, 1, 1000)
-lambda_adjusted = 1.0 / np.log(2)  # Adjust lambda to normalize the PDF over [0, 1]
+
+# Adjusted rate parameter to alter the shape of the exponential distribution
+lambda_adjusted = 0.5 / np.log(2)  # Adjusted lambda for desired distribution shape
 pdf = lambda_adjusted * np.exp(-lambda_adjusted * x)
 
 # Convert PDF values to percentages
