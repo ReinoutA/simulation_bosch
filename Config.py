@@ -35,53 +35,21 @@ REFRESH_RATE = 10
 shape_param = 4  # Vormparameter (kan worden aangepast)
 scale_param = 14  # Schaalparameter (kan worden aangepast)
 
-runtimes = [
-    {
-        OrderType.HIGH_QUALITY : 300,
-        OrderType.MEDIUM_QUALITY : 600,
-        OrderType.LOW_QUALITY : 1000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 200,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 500,
-    },
-    {
-        OrderType.HIGH_QUALITY : 400,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 400,
-    },
-    {
-        OrderType.HIGH_QUALITY : 200,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 1000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 600,
-        OrderType.MEDIUM_QUALITY : 1000,
-        OrderType.LOW_QUALITY : 1400,
-    },
-]
-
 can_do_lists = [
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.103_fx_16m_37_xxx, OrderType.103_fx_16m_37_xxx, OrderType.103_fx_16m_37_xxx],
+    [OrderType.103_fx_16m_37_xxx, OrderType.103_fx_16m_37_xxx],
+    [OrderType.103_fx_16m_37_xxx, OrderType.103_fx_16m_37_xxx, OrderType.103_fx_16m_37_xxx],
 ]
 
 priority_lists = [
     [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
     [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY]
 ]
 
 configurations = []
 for i in range(5):
-    configurations.append(Configuration(transitions[i], runtimes[i], can_do_lists[i], priority_lists[i]))
+    configurations.append(Configuration(can_do_lists[i], priority_lists[i]))
     
 order_type_map = {e.name: e for e in OrderType}
 order_types = [e for e in OrderType]
