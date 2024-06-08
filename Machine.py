@@ -22,8 +22,9 @@ class Machine(sim.Component):
         while Config.simulation_running and Config.gui_running:
             if len(self.queue) == 0:
                 self.passivate()
-                
+                            
             order, num_processed = self.method.schedule_next(self)
+            # print(f"Machine {self.id}")
             
             if order is not None:
                 if order.type not in self.configuration.can_do_list:
@@ -34,7 +35,7 @@ class Machine(sim.Component):
                     self.passivate()
                 
                 if self.last_order_type != 0:
-                    transition_time = self.get_transition_time(order)
+                    transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()
                     self.total_transition_time += transition_time
                     self.hold(transition_time)
 
@@ -49,6 +50,8 @@ class Machine(sim.Component):
                 order.size -= num_processed
                 order.execution_time += execution_time
                 order.create_report(num_processed, now)
+            else:
+                self.passivate()
                 
     def get_transition_time(self, order):
         if self.last_order_type == order.type:
@@ -56,7 +59,7 @@ class Machine(sim.Component):
         return self.configuration.transitions.get((self.last_order_type, order.type), 0).sample()
     
     def get_execution_time(self, order):
-        return order.size / self.configuration.runtime[order.type]
+        return order.size / self.configuration.get_runtime(order.type)
     
     def get_priority_list(self):
         return self.configuration.priority_list

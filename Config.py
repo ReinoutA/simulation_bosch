@@ -21,124 +21,39 @@ LOG_GENERATOR = False
 LOG_DATAFRAMES =  False
 
 # Generator parameters
-ORDER_SIZE_MEAN = 10000
-ORDER_SIZE_STD = 5000
-ORDER_MIN_SIZE = 1000
-ORDER_INTERVAL_MEAN = 10000
-ORDER_INTERVAL_STD = 3000
+ORDER_SIZE_MEAN = 1000
+ORDER_SIZE_STD = 100
+ORDER_MIN_SIZE = 100
+ORDER_INTERVAL_MEAN = 500
+ORDER_INTERVAL_STD = 50
 DEADLINE_MEAN = 20
 DEADLINE_STD = 30
 DEADLINE_MIN = 10
 
 # GUI parameters
 REFRESH_RATE = 10
-shape_param = 4  # Vormparameter (kan worden aangepast)
-scale_param = 14  # Schaalparameter (kan worden aangepast)
-transitions = [
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    },
-    {
-        (OrderType.HIGH_QUALITY, OrderType.HIGH_QUALITY) : 0,
-        (OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.HIGH_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.MEDIUM_QUALITY) : 0,
-        (OrderType.MEDIUM_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.LOW_QUALITY) : 0,
-        (OrderType.LOW_QUALITY, OrderType.HIGH_QUALITY) : sim.Gamma(shape_param, scale_param),
-        (OrderType.LOW_QUALITY, OrderType.MEDIUM_QUALITY) : sim.Gamma(shape_param, scale_param),
-    }
-]
+SHAPE_PARAM = 4  # Vormparameter (kan worden aangepast)
+SCALE_PARAM = 14  # Schaalparameter (kan worden aangepast)
 
-runtimes = [
-    {
-        OrderType.HIGH_QUALITY : 300,
-        OrderType.MEDIUM_QUALITY : 600,
-        OrderType.LOW_QUALITY : 1000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 200,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 500,
-    },
-    {
-        OrderType.HIGH_QUALITY : 400,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 400,
-    },
-    {
-        OrderType.HIGH_QUALITY : 200,
-        OrderType.MEDIUM_QUALITY : 400,
-        OrderType.LOW_QUALITY : 1000,
-    },
-    {
-        OrderType.HIGH_QUALITY : 600,
-        OrderType.MEDIUM_QUALITY : 1000,
-        OrderType.LOW_QUALITY : 1400,
-    },
-]
+
+order_types = list(OrderType)
+order_type_weights = [0.14, 0.14, 0.14, 0.14, 0.14, 0.15, 0.15]
 
 can_do_lists = [
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.FX_16m_37xxx, OrderType.NU_20m_80xx, OrderType.NU_22m_68xxx, OrderType.ND_22m_143xxx],
+    [OrderType.NU_22m_68xxx, OrderType.ND_22m_143xxx],
+    [OrderType.ND_35m_143xxx, OrderType.ND_35m_79xxx, OrderType.ND_40m_143xxx],
 ]
 
 priority_lists = [
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
-    [OrderType.HIGH_QUALITY, OrderType.MEDIUM_QUALITY, OrderType.LOW_QUALITY],
+    [OrderType.FX_16m_37xxx, OrderType.ND_22m_143xxx, OrderType.NU_20m_80xx, OrderType.NU_22m_68xxx],
+    [OrderType.NU_22m_68xxx, OrderType.ND_22m_143xxx],
+    [OrderType.ND_35m_143xxx, OrderType.ND_35m_79xxx, OrderType.ND_40m_143xxx],
 ]
 
 configurations = []
-for i in range(5):
-    configurations.append(Configuration(transitions[i], runtimes[i], can_do_lists[i], priority_lists[i]))
+for i in range(3):
+    configurations.append(Configuration(can_do_lists[i], priority_lists[i]))
     
 order_type_map = {e.name: e for e in OrderType}
 order_types = [e for e in OrderType]

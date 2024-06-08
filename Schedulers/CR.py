@@ -13,7 +13,7 @@ class CR(Method):
         now = machine.env.now()
 
         for o in machine.queue:
-            if o.size < worst_val / machine.get_execution_time(o) and o.type in machine.configuration.can_do_list:
+            if o.type in machine.configuration.can_do_list and o.size < worst_val / machine.get_execution_time(o):
                 worst_val = o.get_time_left(now)
                 order = o
                 
