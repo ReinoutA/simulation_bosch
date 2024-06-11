@@ -151,7 +151,7 @@ class Gui(Thread):
     def stop_simulation(self):
         if Config.simulation_running:
             Config.simulation_running = False
-            self.ax_rr.clear()
+            self.ax_stock.clear()
             self.ax_tn.clear()
             self.canvas.draw()
             

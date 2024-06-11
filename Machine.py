@@ -17,6 +17,9 @@ class Machine(sim.Component):
         self.total_execution_time = 0
         self.env = env
         self.configuration = configuration
+        self.total_broken = 0
+        self.runtime = 1.0
+        self.error_rate = 0.0
         
     def process(self):
         while Config.simulation_running and Config.gui_running:
@@ -24,32 +27,40 @@ class Machine(sim.Component):
                 self.passivate()
                             
             order, num_processed = self.method.schedule_next(self)
-            # print(f"Machine {self.id}")
             
             if order is not None:
+                if order.size == 0:
+                    print("Order size is 0, skipping")
                 if order.type not in self.configuration.can_do_list:
                     self.queue.add(order)
                     for machine in self.machines:
                         if machine.status() != 'passive':
                             machine.activate()
                     self.passivate()
-                
-                if self.last_order_type != 0:
-                    transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()
-                    self.total_transition_time += transition_time
-                    self.hold(transition_time)
+                else:
+                    if self.last_order_type != 0:
+                        transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()
+                        self.total_transition_time += transition_time
+                        self.hold(transition_time)
 
-                self.last_order_type = order.type
-                self.total_profit += int(order.profit * num_processed / order.size)
-                execution_time = self.get_execution_time(order)
-                self.total_execution_time += execution_time
-                self.hold(execution_time)
-                now = self.env.now()
-                if 1 - (num_processed / order.size) < 0.05:
-                    order.end_time = now
-                order.size -= num_processed
-                order.execution_time += execution_time
-                order.create_report(num_processed, now)
+                    self.runtime, self.error_rate = self.configuration.get_sample(order.type)
+
+                    self.last_order_type = order.type
+                    if order.size == 0:
+                        continue
+                    self.total_profit += int(order.profit * num_processed / order.size)
+                    now = self.env.now()
+                    if 1 - (num_processed / order.size) < 0.05:
+                        order.end_time = now
+                    num_broken = num_processed * self.error_rate
+                    num_processed -= num_broken
+                    order.size -= num_processed
+                    self.total_broken += num_broken
+                    execution_time = num_processed / self.runtime
+                    order.execution_time += execution_time
+                    self.total_execution_time += execution_time
+                    self.hold(execution_time)
+                    order.create_report(num_processed, now)
             else:
                 self.passivate()
                 
@@ -58,8 +69,14 @@ class Machine(sim.Component):
             return 0
         return self.configuration.transitions.get((self.last_order_type, order.type), 0).sample()
     
-    def get_execution_time(self, order):
-        return order.size / self.configuration.get_runtime(order.type)
+    def get_runtime(self):
+        return self.runtime
     
     def get_priority_list(self):
         return self.configuration.priority_list
+    
+    def get_error_rate(self):
+        return self.error_rate
+    
+    def get_execution_time(self, order):
+        return order.size / self.runtime

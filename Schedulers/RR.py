@@ -14,7 +14,7 @@ class RR(Method):
             
             execution_time = machine.get_execution_time(order)
             if execution_time > self.window_size:
-                left_over = int((execution_time - self.window_size) * machine.configuration.runtime[order.type])
+                left_over = int((execution_time - self.window_size) * machine.get_runtime(order))
                 num_processed = order.size * (1 - (left_over / order.size))
                 
                 if 1 - (num_processed / order.size) < 0.05:

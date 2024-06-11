@@ -21,21 +21,18 @@ LOG_GENERATOR = False
 LOG_DATAFRAMES =  False
 
 # Generator parameters
-ORDER_SIZE_MEAN = 1000
-ORDER_SIZE_STD = 100
-ORDER_MIN_SIZE = 100
 ORDER_INTERVAL_MEAN = 500
 ORDER_INTERVAL_STD = 50
-DEADLINE_MEAN = 20
-DEADLINE_STD = 30
-DEADLINE_MIN = 10
+DEADLINE_MEAN = 10
+DEADLINE_STD = 0
+DEADLINE_MIN = 0
 
 # GUI parameters
 REFRESH_RATE = 10
 SHAPE_PARAM = 4  # Vormparameter (kan worden aangepast)
 SCALE_PARAM = 14  # Schaalparameter (kan worden aangepast)
 
-
+materials = ["FX", "ND", "ND", "NU", "RD", "YL"]
 order_types = list(OrderType)
 order_type_weights = [0.14, 0.14, 0.14, 0.14, 0.14, 0.15, 0.15]
 

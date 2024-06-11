@@ -1,0 +1,2 @@
+Line,shift,Code,IO parts,NIO parts,Material,Speed,Profile,start date,start time,end date,end time,start datetime,end datetime,total produced,error rate,time span,production speed [PC / min]
+105,early,5020,15,4708,RD,35m,123.xxx,12/01/2024,08:33:00,12/01/2024,11:36:00,2024-01-12 08:33:00,2024-01-12 11:36:00,4723,0.9968240525089985,183.0,25.808743169398905
