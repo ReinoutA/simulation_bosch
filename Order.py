@@ -24,7 +24,7 @@ class Order(sim.Component):
         self.report.append(self, num_processed, now)
             
     def get_response_ratio(self, now, execution_time):
-        return (now - self.start_time) / execution_time
+        return ((now - self.start_time) + execution_time) / execution_time
     
     def get_time_left(self, now):
         return self.deadline - now
