@@ -24,6 +24,8 @@ class Gui(Thread):
         self.reports = []
         self.simulation = None
         self.graphing_thread = None
+        self.total_transition_time = {}
+        self.total_produced = {}
         
     def run(self):
         Config.gui_running = True
@@ -47,12 +49,6 @@ class Gui(Thread):
         self.combo.bind('<<ComboboxSelected>>', self.on_combo_change)
         self.combo.grid(row=0, column=1)
         self.selected_schedulers = []
-        
-        self.selected_type = tk.StringVar(button_frame)
-        self.selected_type.set(order_type_names[0])
-
-        option_menu = tk.OptionMenu(button_frame, self.selected_type, *order_type_names)
-        option_menu.grid(row=0, column=0)
 
         add_scheduler_button = Button(button_frame, text="Add scheduler", command=self.add_scheduler)
         add_scheduler_button.grid(row=1, column=0, sticky='ew')
@@ -69,9 +65,11 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
         stop_simulation_button.grid(row=5, column=0, sticky='ew')
 
-        self.fig = Figure(figsize=(10, 5))
-        self.ax_stock = self.fig.add_subplot(121)
-        self.ax_tn = self.fig.add_subplot(122)
+        self.fig = Figure(figsize=(10, 9.5))
+        self.ax_stock = self.fig.add_subplot(221)
+        self.ax_tn = self.fig.add_subplot(222)
+        self.ax_ttt = self.fig.add_subplot(223)
+        self.ax_tp = self.fig.add_subplot(224)
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         self.canvas.draw()
@@ -90,19 +88,43 @@ class Gui(Thread):
         while Config.simulation_running:
             self.ax_stock.clear()
             self.ax_tn.clear()
+            self.ax_ttt.clear()
+            self.ax_tp.clear()
             
             lines_tn = []
+            total_transition_time_map = {}
+            total_produced_map = {}
             
             for i in range(len(Config.methods)):
                 if i < len(self.reports):
                     lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None, lines_tn)
+                    total_transition_time_map[self.reports[i].name] = self.reports[i].total_transition_time
+                    total_produced_map[self.reports[i].name] = self.reports[i].total_produced
                 else:
                     logging.error("Reports index out of range")
-
+            
+            colors = [line.get_color() for line in lines_tn]
+            
+            if len(total_transition_time_map) > 0:
+                labels, total_transition_time = zip(*total_transition_time_map.items())
+                self.ax_ttt.bar(labels, total_transition_time, color=colors)
+                self.ax_ttt.set_title("Total transition time")
+                self.ax_ttt.set_ylabel("Transition time (min)")
+                self.ax_ttt.set_ylim(bottom=0)
+                self.ax_ttt.grid(axis="y")
+            
+            if len(total_produced_map) > 0:
+                labels, total_produced = zip(*total_produced_map.items())
+                self.ax_tp.bar(labels, total_produced, color=colors)
+                self.ax_tp.set_title("Total produced")
+                self.ax_tp.set_ylabel("Total (pieces)")
+                self.ax_tp.set_ylim(bottom=0)
+                self.ax_tp.grid(axis="y")
+            
             self.ax_stock.set_title("Stock")
             self.ax_stock.set_xlabel("Time (weeks)")
             self.ax_stock.set_ylabel("Stock (pieces)")
-            self.ax_stock.set_ylim(bottom=0)  # Ensure y-axis starts at 0
+            self.ax_stock.set_ylim(bottom=0)
             self.ax_stock.grid()
 
             self.ax_tn.set_xlim([0, 100])
@@ -124,6 +146,8 @@ class Gui(Thread):
             
             self.ax_stock.clear()
             self.ax_tn.clear()
+            self.ax_ttt.clear()
+            self.ax_tp.clear()
             self.canvas.draw()
             
             Config.methods = []
@@ -158,6 +182,10 @@ class Gui(Thread):
     
     def stop_simulation(self):
         if Config.simulation_running:
+            # self.ax_stock.clear()
+            # self.ax_tn.clear()
+            # self.ax_ttt.clear()
+            # self.ax_tp.clear()
             Config.simulation_running = False
             
     def add_scheduler(self):

@@ -20,8 +20,8 @@ class Order(sim.Component):
         self.num_processed = 0
         self.is_in_stock = False
         
-    def create_report(self, num_processed, now):
-        self.report.append(self, num_processed, now)
+    def create_report(self, num_processed, now, total_transition_time, total_produced):
+        self.report.append(self, num_processed, now, total_transition_time, total_produced)
             
     def get_response_ratio(self, now, execution_time):
         return ((now - self.start_time) + execution_time) / execution_time

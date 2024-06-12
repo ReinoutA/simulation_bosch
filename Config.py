@@ -34,6 +34,7 @@ DEADLINE_MIN = 1
 REFRESH_RATE = 10
 SHAPE_PARAM = 4  # Vormparameter (kan worden aangepast)
 SCALE_PARAM = 14  # Schaalparameter (kan worden aangepast)
+SLEEP_FACTOR = 0.05 # Determines silumation speed
 
 materials = ["FX", "ND", "ND", "NU", "RD", "YL"]
 order_types = list(OrderType)

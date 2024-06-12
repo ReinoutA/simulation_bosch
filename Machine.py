@@ -20,6 +20,7 @@ class Machine(sim.Component):
         self.total_broken = 0
         self.runtime = 1.0
         self.error_rate = 0.0
+        self.total_produced = 0
         
     def process(self):
         while Config.simulation_running and Config.gui_running:
@@ -48,20 +49,27 @@ class Machine(sim.Component):
                     self.last_order_type = order.type
                     if order.size == 0:
                         continue
+                    
                     self.total_profit += int(order.profit * num_processed / order.size)
                     now = self.env.now()
                     if 1 - (num_processed / order.size) < 0.05:
                         order.end_time = now
-                    # num_broken = int(num_processed * self.error_rate)
-                    # num_processed -= num_broken
+                        
+                    self.total_produced += num_processed
                     order.size -= num_processed
-                    # self.total_broken += num_broken
                     execution_time = int(num_processed / self.runtime)
                     order.execution_time += execution_time
                     self.total_execution_time += execution_time
                     self.hold(execution_time)
                     # print(f"order.type = {order.type}, self.runtime = {self.runtime}, self.error_rate = {self.error_rate}, order.size = {order.size}, order.execution_time = {order.execution_time}")
-                    order.create_report(num_processed, now)
+                    
+                    total_transition_time = self.total_transition_time
+                    total_produced = self.total_produced
+                    for machine in self.machines:
+                        total_transition_time += machine.total_transition_time
+                        total_produced += machine.total_produced
+                    
+                    order.create_report(num_processed, now, total_transition_time, total_produced)
             else:
                 self.passivate()
                 

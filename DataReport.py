@@ -12,8 +12,10 @@ class DataReport:
         self.mutex = threading.Lock()
         self.name = name
         self.update_queue = []
+        self.total_transition_time = 0
+        self.total_produced = 0
        
-    def append(self, order, num_processed, now):
+    def append(self, order, num_processed, now, total_transition_time, total_produced):
         self.mutex.acquire()
         new_row = {"Order": order.identifier,
                    "Starting time": order.start_time,
@@ -37,6 +39,8 @@ class DataReport:
         
         self.stock.append((now / (DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR), new_val))
         logging.info(f"Appending DataFrame {self.name}")
+        self.total_transition_time = total_transition_time
+        self.total_produced = total_produced
         self.mutex.release()
         
     def draw(self, name, ax_stock, ax_tn, color, lines_tn):
@@ -102,7 +106,6 @@ class DataReport:
             else:
                 line_tn = ax_tn.plot(x_values, self.df["Tardiness"], label=name)[0]
                 lines_tn.append(line_tn)
-
             # ax_tn.set_yscale('log')
         self.mutex.release()
         

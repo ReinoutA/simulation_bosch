@@ -32,7 +32,7 @@ class OrderGenerator(sim.Component):
 
             self.num_generated += 1
             hold_time = abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample())
-            time.sleep(0.5)
+            time.sleep(SLEEP_FACTOR)
             total_hold_time += hold_time
             
             #logging.info(total_hold_time)
