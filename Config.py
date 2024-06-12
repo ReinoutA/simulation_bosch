@@ -34,7 +34,7 @@ SCALE_PARAM = 14  # Schaalparameter (kan worden aangepast)
 
 materials = ["FX", "ND", "ND", "NU", "RD", "YL"]
 order_types = list(OrderType)
-order_type_weights = [0.14, 0.14, 0.14, 0.14, 0.14, 0.15, 0.15]
+order_type_weights = [0.1187, 0.069, 0.0734, 0.3663, 0.2085, 0.0353, 0.1288]
 
 can_do_lists = [
     [OrderType.FX_16m_37xxx, OrderType.NU_20m_80xx, OrderType.NU_22m_68xxx, OrderType.ND_22m_143xxx],
