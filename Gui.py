@@ -102,6 +102,7 @@ class Gui(Thread):
             self.ax_stock.set_title("Stock")
             self.ax_stock.set_xlabel("Time (min)")
             self.ax_stock.set_ylabel("Stock")
+            self.ax_stock.set_ylim(bottom=0)  # Ensure y-axis starts at 0
             self.ax_stock.grid()
 
             self.ax_tn.set_xlim([0, 100])
@@ -109,8 +110,10 @@ class Gui(Thread):
 
             self.ax_tn.set_xlabel("% of orders")
             self.ax_tn.set_ylabel("Tardiness (min)")
+            self.ax_tn.set_yscale('log')
             self.ax_tn.grid()
 
+            self.fig.subplots_adjust(hspace=0.5)
             self.fig.legend(handles=lines_tn, loc='upper right')
             # self.fig.legend(handles=[self.line_rr, self.line_tn], loc='upper right')
             self.canvas.draw()
