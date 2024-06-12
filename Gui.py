@@ -65,7 +65,7 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
         stop_simulation_button.grid(row=5, column=0, sticky='ew')
 
-        self.fig = Figure(figsize=(10, 8))
+        self.fig = Figure(figsize=(10, 7.8))
         self.ax_stock = self.fig.add_subplot(221)
         self.ax_tn = self.fig.add_subplot(222)
         self.ax_ttt = self.fig.add_subplot(223)
