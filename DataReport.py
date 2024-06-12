@@ -67,18 +67,18 @@ class DataReport:
 
             # ax_rr.set_yscale('log')
 
-            self.df["Lateness"] = (self.df["End time"] - self.df["Deadline"]).clip(lower=0)
+            self.df["Tardiness"] = (self.df["End time"] - self.df["Deadline"]).clip(lower=0)
             if self.df is not None:
-                self.df.sort_values("Lateness", inplace=True)
+                self.df.sort_values("Tardiness", inplace=True)
                 self.df = self.df.reset_index(drop=True)
                 x_values = np.linspace(0, 100, len(self.df)) 
             
             line_tn = None
             if color is not None:
-                line_tn = ax_tn.plot(x_values, self.df["Lateness"], label=name, color=color)[0]
+                line_tn = ax_tn.plot(x_values, self.df["Tardiness"], label=name, color=color)[0]
                 lines_tn.append(line_tn)
             else:
-                line_tn = ax_tn.plot(x_values, self.df["Lateness"], label=name)[0]
+                line_tn = ax_tn.plot(x_values, self.df["Tardiness"], label=name)[0]
                 lines_tn.append(line_tn)
 
             # ax_tn.set_yscale('log')

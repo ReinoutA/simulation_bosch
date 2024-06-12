@@ -105,10 +105,10 @@ class Gui(Thread):
             self.ax_stock.grid()
 
             self.ax_tn.set_xlim([0, 100])
-            self.ax_tn.set_title("Lateness")
+            self.ax_tn.set_title("Tardiness")
 
             self.ax_tn.set_xlabel("% of orders")
-            self.ax_tn.set_ylabel("Lateness")
+            self.ax_tn.set_ylabel("Tardiness")
             self.ax_tn.grid()
 
             self.fig.legend(handles=lines_tn, loc='upper right')
