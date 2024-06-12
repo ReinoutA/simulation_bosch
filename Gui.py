@@ -100,7 +100,7 @@ class Gui(Thread):
                     logging.error("Reports index out of range")
 
             self.ax_stock.set_title("Stock")
-            self.ax_stock.set_xlabel("time")
+            self.ax_stock.set_xlabel("Time (min)")
             self.ax_stock.set_ylabel("Stock")
             self.ax_stock.grid()
 
@@ -108,7 +108,7 @@ class Gui(Thread):
             self.ax_tn.set_title("Tardiness")
 
             self.ax_tn.set_xlabel("% of orders")
-            self.ax_tn.set_ylabel("Tardiness")
+            self.ax_tn.set_ylabel("Tardiness (min)")
             self.ax_tn.grid()
 
             self.fig.legend(handles=lines_tn, loc='upper right')
