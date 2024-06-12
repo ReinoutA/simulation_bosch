@@ -14,8 +14,9 @@ class DataReport:
         self.update_queue = []
         self.total_transition_time = 0
         self.total_produced = 0
+        self.total_execution_time = 0
        
-    def append(self, order, num_processed, now, total_transition_time, total_produced):
+    def append(self, order, num_processed, now, total_transition_time, total_produced, total_execution_time):
         self.mutex.acquire()
         new_row = {"Order": order.identifier,
                    "Starting time": order.start_time,
@@ -41,6 +42,7 @@ class DataReport:
         logging.info(f"Appending DataFrame {self.name}")
         self.total_transition_time = total_transition_time
         self.total_produced = total_produced
+        self.total_execution_time = total_execution_time
         self.mutex.release()
         
     def draw(self, name, ax_stock, ax_tn, color, lines_tn):

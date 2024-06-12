@@ -32,17 +32,20 @@ class OrderGenerator(sim.Component):
 
             self.num_generated += 1
             hold_time = abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample())
-            time.sleep(SLEEP_FACTOR)
+            if SLEEP_FACTOR > 0.0:
+                time.sleep(SLEEP_FACTOR)
             total_hold_time += hold_time
             
             #logging.info(total_hold_time)
             self.hold(hold_time)
             
+            start_time = int(self.env.now())
+            deadline = int(start_time + min(DEADLINE_MIN, sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample()) * DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR)
+            transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()
+                
             for i in range(len(self.queues)):
                 # deadline = max(DEADLINE_MIN, abs(int(sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample())))
-                start_time = int(self.env.now())
-                deadline = int(start_time + min(DEADLINE_MIN, sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample()) * DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR)
-                order = Order(random_order_type, size, start_time, deadline, 0, 1, self.env, self.reports[i])
+                order = Order(random_order_type, size, start_time, deadline, transition_time, 0, 1, self.env, self.reports[i])
                 self.queues[i].add(order)
                 
                 for machine in self.machines[i]:

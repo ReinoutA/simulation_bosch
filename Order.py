@@ -3,7 +3,7 @@ import salabim as sim
 class Order(sim.Component):
     counter = 0
     
-    def __init__(self, type, size, start_time, deadline, received_date, profit, env, report):
+    def __init__(self, type, size, start_time, deadline, transition_time, received_date, profit, env, report):
         super().__init__()
         self.identifier = Order.counter
         Order.counter += 1
@@ -19,9 +19,10 @@ class Order(sim.Component):
         self.report = report
         self.num_processed = 0
         self.is_in_stock = False
+        self.transition_time = transition_time
         
-    def create_report(self, num_processed, now, total_transition_time, total_produced):
-        self.report.append(self, num_processed, now, total_transition_time, total_produced)
+    def create_report(self, num_processed, now, total_transition_time, total_produced, total_uptime):
+        self.report.append(self, num_processed, now, total_transition_time, total_produced, total_uptime)
             
     def get_response_ratio(self, now, execution_time):
         return ((now - self.start_time) + execution_time) / execution_time

@@ -39,13 +39,14 @@ class Machine(sim.Component):
                             machine.activate()
                     self.passivate()
                 else:
-                    if self.last_order_type != 0:
-                        transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()
+                    if self.last_order_type != 0 and self.last_order_type != order.type:
+                        transition_time = order.transition_time
                         self.total_transition_time += transition_time
                         self.hold(transition_time)
 
                     self.runtime, self.error_rate = self.configuration.get_sample(order.type)
 
+                    # self.runtime = 40
                     self.last_order_type = order.type
                     if order.size == 0:
                         continue
@@ -65,11 +66,13 @@ class Machine(sim.Component):
                     
                     total_transition_time = self.total_transition_time
                     total_produced = self.total_produced
+                    total_execution_time = self.total_execution_time
                     for machine in self.machines:
                         total_transition_time += machine.total_transition_time
                         total_produced += machine.total_produced
+                        total_execution_time += machine.total_execution_time
                     
-                    order.create_report(num_processed, now, total_transition_time, total_produced)
+                    order.create_report(num_processed, now, total_transition_time, total_produced, total_execution_time)
             else:
                 self.passivate()
                 
