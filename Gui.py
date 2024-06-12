@@ -101,7 +101,7 @@ class Gui(Thread):
 
             self.ax_stock.set_title("Stock")
             self.ax_stock.set_xlabel("Time (min)")
-            self.ax_stock.set_ylabel("Stock")
+            self.ax_stock.set_ylabel("Stock (pieces)")
             self.ax_stock.set_ylim(bottom=0)  # Ensure y-axis starts at 0
             self.ax_stock.grid()
 
