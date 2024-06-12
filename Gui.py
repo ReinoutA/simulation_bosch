@@ -65,12 +65,13 @@ class Gui(Thread):
         stop_simulation_button = Button(button_frame, text="Change configuration", command=self.configuration_menu)
         stop_simulation_button.grid(row=5, column=0, sticky='ew')
 
-        self.fig = Figure(figsize=(10, 9.5))
+        self.fig = Figure(figsize=(10, 8))
         self.ax_stock = self.fig.add_subplot(221)
         self.ax_tn = self.fig.add_subplot(222)
         self.ax_ttt = self.fig.add_subplot(223)
         self.ax_tp = self.fig.add_subplot(224)
 
+        self.fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1, wspace=0.2, hspace=0.2)
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         self.canvas.draw()
         self.canvas.get_tk_widget().grid(row=0, column=0, rowspan=2)
