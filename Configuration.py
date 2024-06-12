@@ -13,7 +13,7 @@ class Configuration:
         self.priority_list = priority_list
         self.dfs = {}
         for type in self.can_do_list:
-            self.dfs[type] = pd.read_csv(f"Data/{line_numbers[Configuration.num_configurations - 1]}_{str(type).replace("OrderType.", "")}.csv")
+            self.dfs[type] = pd.read_csv(f"Data/{line_numbers[Configuration.num_configurations - 1]}_{str(type).replace('OrderType.', '')}.csv")
         self.mutex = threading.Lock()
         
     def get_sample(self, order_type):
