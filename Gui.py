@@ -95,7 +95,7 @@ class Gui(Thread):
             
             for i in range(len(Config.methods)):
                 if i < len(self.reports):
-                    lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None, lines_tn, order_type_map[self.selected_type.get()])
+                    lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None, lines_tn)
                 else:
                     logging.error("Reports index out of range")
 
@@ -110,7 +110,7 @@ class Gui(Thread):
 
             self.ax_tn.set_xlabel("% of orders")
             self.ax_tn.set_ylabel("Tardiness (min)")
-            self.ax_tn.set_yscale('log')
+            # self.ax_tn.set_yscale('log')
             self.ax_tn.grid()
 
             self.fig.subplots_adjust(hspace=0.5)

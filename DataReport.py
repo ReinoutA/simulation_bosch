@@ -7,7 +7,7 @@ from Config import *
 class DataReport:
     def __init__(self, name):
         self.df = pd.DataFrame(columns=["Order", "Starting time", "End time", "Execution time", "Deadline"])
-        self.stock = [0]
+        self.stock = [(0, 0)]
         self.mutex = threading.Lock()
         self.name = name
         self.update_queue = []
@@ -22,7 +22,7 @@ class DataReport:
         
         self.df.loc[len(self.df)] = new_row
         
-        new_val = self.stock[len(self.stock) - 1]
+        new_val = self.stock[len(self.stock) - 1][1]
         if now < order.deadline:
             new_val += num_processed
             order.is_in_stock = True
@@ -34,11 +34,12 @@ class DataReport:
                     new_val -= order.original_size
                 self.update_queue.remove(o)
         
-        self.stock.append(new_val)
+        self.stock.append((now, new_val))
+        self.stock.sort(key=lambda x: x[0])
         logging.info(f"Appending DataFrame {self.name}")
         self.mutex.release()
         
-    def draw(self, name, ax_stock, ax_tn, color, lines_tn, selected_type):
+    def draw(self, name, ax_stock, ax_tn, color, lines_tn):
         if not Config.gui_running:
             logging.error(f"Gui running is False")
             return
@@ -59,11 +60,31 @@ class DataReport:
                 # line_rr = ax_rr.plot(x_values, self.df["Response ratio"], label=name, color=color)[0]
                 # ax_stock.plot(self.stock[selected_type], label=name, color=color)[0]
                 # ax_stock.set_xlim([0, len(self.stock[OrderType.LOW_QUALITY])])
-                ax_stock.plot(self.stock, label=name, color=color)[0]
-                ax_stock.set_xlim([0, len(self.stock)])
+                # self.stock.sort()
+                
+                stock_val = []
+                stock_time = []
+                
+                for (time, stock) in self.stock:
+                    stock_time.append(time)
+                    stock_val.append(stock)
+                    
+                ax_stock.plot(stock_time, stock_val, label=name, color=color)[0]
+                ax_stock.set_xlim([0, stock_time[-1]])
             else:
                 # line_rr = ax_rr.plot(x_values, self.df["Response ratio"], label=name)[0]
-                ax_stock.plot(self.stock, label=name)[0]
+                # self.stock.sort()
+                
+                stock_val = []
+                stock_time = []
+                
+                for (time, stock) in self.stock:
+                    stock_time.append(time)
+                    stock_val.append(stock)
+                    
+                ax_stock.plot(stock_time, stock_val, label=name)[0]
+                ax_stock.set_xlim([0, stock_time[-1]])
+                # print(self.stock[-1])
 
             # ax_rr.set_yscale('log')
 

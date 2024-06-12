@@ -52,14 +52,15 @@ class Machine(sim.Component):
                     now = self.env.now()
                     if 1 - (num_processed / order.size) < 0.05:
                         order.end_time = now
-                    num_broken = num_processed * self.error_rate
-                    num_processed -= num_broken
+                    # num_broken = int(num_processed * self.error_rate)
+                    # num_processed -= num_broken
                     order.size -= num_processed
-                    self.total_broken += num_broken
-                    execution_time = num_processed / self.runtime
+                    # self.total_broken += num_broken
+                    execution_time = int(num_processed / self.runtime)
                     order.execution_time += execution_time
                     self.total_execution_time += execution_time
                     self.hold(execution_time)
+                    print(f"order.type = {order.type}, self.runtime = {self.runtime}, self.error_rate = {self.error_rate}, order.size = {order.size}, order.execution_time = {order.execution_time}")
                     order.create_report(num_processed, now)
             else:
                 self.passivate()

@@ -6,6 +6,11 @@ import Config
 from Order import Order
 from OrderType import OrderType
 import pandas as pd
+import time
+
+MINUTES_IN_HOUR = 60
+HOURS_IN_DAY = 24
+DAYS_IN_WEEK = 7
 
 class OrderGenerator(sim.Component):
     def __init__(self, queues, machines, env, reports):
@@ -39,7 +44,7 @@ class OrderGenerator(sim.Component):
             for i in range(len(self.queues)):
                 # deadline = max(DEADLINE_MIN, abs(int(sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample())))
                 start_time = self.env.now()
-                deadline = start_time
+                deadline = start_time + DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR
                 order = Order(random_order_type, size, start_time, deadline, 0, 1, self.env, self.reports[i])
                 self.queues[i].add(order)
                 

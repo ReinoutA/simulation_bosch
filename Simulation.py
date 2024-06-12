@@ -40,6 +40,7 @@ class Simulation(Thread):
         generator = OrderGenerator(global_queues, all_machines, env, self.reports)
         generator.activate()
             
+        env.speed(0.001)
         env.run()
 
         if LOG_QUEUES:
