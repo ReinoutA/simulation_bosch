@@ -19,7 +19,7 @@ import Config
 from Simulation import Simulation
 
 class Gui(Thread):
-    def __init__(self,):
+    def __init__(self):
         super().__init__()
         self.reports = []
         self.simulation = None
