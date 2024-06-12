@@ -3,6 +3,7 @@ import threading
 import logging
 import numpy as np
 from Config import *
+import Config
 
 class DataReport:
     def __init__(self, name):
@@ -34,8 +35,7 @@ class DataReport:
                     new_val -= order.original_size
                 self.update_queue.remove(o)
         
-        self.stock.append((now, new_val))
-        self.stock.sort(key=lambda x: x[0])
+        self.stock.append((now / (DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR), new_val))
         logging.info(f"Appending DataFrame {self.name}")
         self.mutex.release()
         
@@ -65,10 +65,10 @@ class DataReport:
                 stock_val = []
                 stock_time = []
                 
-                for (time, stock) in self.stock:
+                sorted_stock = sorted(self.stock, key=lambda x: x[0])
+                for (time, stock) in sorted_stock:
                     stock_time.append(time)
                     stock_val.append(stock)
-                    
                 ax_stock.plot(stock_time, stock_val, label=name, color=color)[0]
                 ax_stock.set_xlim([0, stock_time[-1]])
             else:
@@ -78,7 +78,8 @@ class DataReport:
                 stock_val = []
                 stock_time = []
                 
-                for (time, stock) in self.stock:
+                sorted_stock = sorted(self.stock, key=lambda x: x[0])
+                for (time, stock) in sorted_stock:
                     stock_time.append(time)
                     stock_val.append(stock)
                     

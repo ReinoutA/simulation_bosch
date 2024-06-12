@@ -39,8 +39,18 @@ class Simulation(Thread):
             
         generator = OrderGenerator(global_queues, all_machines, env, self.reports)
         generator.activate()
-            
-        env.speed(0.001)
+        
+        # class AdjustSpeedProcess(sim.Component):
+        #     def process(self):
+        #         while True:
+        #             self.hold(50)
+        #             env.speed(2)  # Increase the speed
+        #             self.hold(50)
+        #             env.speed(0.5)  # Decrease the speed
+
+        # # Don't forget to create an instance of your components and start them
+        # AdjustSpeedProcess()
+
         env.run()
 
         if LOG_QUEUES:

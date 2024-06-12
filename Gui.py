@@ -100,7 +100,7 @@ class Gui(Thread):
                     logging.error("Reports index out of range")
 
             self.ax_stock.set_title("Stock")
-            self.ax_stock.set_xlabel("Time (min)")
+            self.ax_stock.set_xlabel("Time (weeks)")
             self.ax_stock.set_ylabel("Stock (pieces)")
             self.ax_stock.set_ylim(bottom=0)  # Ensure y-axis starts at 0
             self.ax_stock.grid()
@@ -121,6 +121,11 @@ class Gui(Thread):
     def start_simulation(self):
         if not Config.simulation_running:
             Config.simulation_running = True
+            
+            self.ax_stock.clear()
+            self.ax_tn.clear()
+            self.canvas.draw()
+            
             Config.methods = []
             
             for name in self.selected_schedulers:
@@ -154,9 +159,6 @@ class Gui(Thread):
     def stop_simulation(self):
         if Config.simulation_running:
             Config.simulation_running = False
-            self.ax_stock.clear()
-            self.ax_tn.clear()
-            self.canvas.draw()
             
     def add_scheduler(self):
         selected = self.selected_scheduling.get()

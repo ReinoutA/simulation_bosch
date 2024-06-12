@@ -12,6 +12,9 @@ import numpy as np
 import salabim as sim
 
 TIME_LIMIT = 365
+MINUTES_IN_HOUR = 60
+HOURS_IN_DAY = 24
+DAYS_IN_WEEK = 7
 
 # Logging parameters
 ENABLE_SIM_TRACE = False
@@ -23,9 +26,9 @@ LOG_DATAFRAMES =  False
 # Generator parameters
 ORDER_INTERVAL_MEAN = 1440
 ORDER_INTERVAL_STD = 0
-DEADLINE_MEAN = 10
-DEADLINE_STD = 0
-DEADLINE_MIN = 0
+DEADLINE_MEAN = 1.2
+DEADLINE_STD = 0.5
+DEADLINE_MIN = 1
 
 # GUI parameters
 REFRESH_RATE = 10

@@ -8,10 +8,6 @@ from OrderType import OrderType
 import pandas as pd
 import time
 
-MINUTES_IN_HOUR = 60
-HOURS_IN_DAY = 24
-DAYS_IN_WEEK = 7
-
 class OrderGenerator(sim.Component):
     def __init__(self, queues, machines, env, reports):
         super().__init__()
@@ -36,6 +32,7 @@ class OrderGenerator(sim.Component):
 
             self.num_generated += 1
             hold_time = abs(sim.Normal(ORDER_INTERVAL_MEAN, ORDER_INTERVAL_STD).sample())
+            time.sleep(0.5)
             total_hold_time += hold_time
             
             #logging.info(total_hold_time)
@@ -43,8 +40,8 @@ class OrderGenerator(sim.Component):
             
             for i in range(len(self.queues)):
                 # deadline = max(DEADLINE_MIN, abs(int(sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample())))
-                start_time = self.env.now()
-                deadline = start_time + DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR
+                start_time = int(self.env.now())
+                deadline = int(start_time + min(DEADLINE_MIN, sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample()) * DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR)
                 order = Order(random_order_type, size, start_time, deadline, 0, 1, self.env, self.reports[i])
                 self.queues[i].add(order)
                 

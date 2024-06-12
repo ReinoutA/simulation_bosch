@@ -60,7 +60,7 @@ class Machine(sim.Component):
                     order.execution_time += execution_time
                     self.total_execution_time += execution_time
                     self.hold(execution_time)
-                    print(f"order.type = {order.type}, self.runtime = {self.runtime}, self.error_rate = {self.error_rate}, order.size = {order.size}, order.execution_time = {order.execution_time}")
+                    # print(f"order.type = {order.type}, self.runtime = {self.runtime}, self.error_rate = {self.error_rate}, order.size = {order.size}, order.execution_time = {order.execution_time}")
                     order.create_report(num_processed, now)
             else:
                 self.passivate()
