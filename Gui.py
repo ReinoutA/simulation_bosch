@@ -17,7 +17,7 @@ import time
 from Config import *
 import Config
 from Simulation import Simulation
-
+import matplotlib.ticker as ticker
 class Gui(Thread):
     def __init__(self):
         super().__init__()
@@ -83,31 +83,33 @@ class Gui(Thread):
 
         if self.graphing_thread is not None:
             self.graphing_thread.join()
-        
+
     def draw_plot(self):
         while Config.simulation_running:
             self.ax_stock.clear()
             self.ax_tn.clear()
             self.ax_ttt.clear()
             self.ax_tp.clear()
-            
+
             lines_tn = []
             total_transition_time_map = {}
             total_produced_map = {}
             total_uptime_map = {}
-            
+
             try:
                 for i in range(len(Config.methods)):
                     if i < len(self.reports):
-                        lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None, lines_tn)
+                        lines_tn = self.reports[i].draw(Config.methods[i].name, self.ax_stock, self.ax_tn, None,
+                                                        lines_tn)
                         total_transition_time_map[self.reports[i].name] = self.reports[i].total_transition_time
                         total_produced_map[self.reports[i].name] = self.reports[i].total_produced
-                        total_uptime_map[self.reports[i].name] = 100 * self.reports[i].total_execution_time / (self.reports[i].total_execution_time + self.reports[i].total_transition_time)
+                        total_uptime_map[self.reports[i].name] = 100 * self.reports[i].total_execution_time / (
+                                    self.reports[i].total_execution_time + self.reports[i].total_transition_time)
                     else:
                         logging.error("Reports index out of range")
-                
+
                 colors = [line.get_color() for line in lines_tn]
-                
+
                 if len(total_uptime_map) > 0:
                     labels, total_uptime = zip(*total_uptime_map.items())
                     bars = self.ax_ttt.bar(labels, total_uptime, color=colors)
@@ -115,12 +117,12 @@ class Gui(Thread):
                     self.ax_ttt.set_ylabel("Uptime (%)")
                     self.ax_ttt.set_ylim(bottom=0)
                     self.ax_ttt.grid(axis="y")
-                    
+
                     for bar, value in zip(bars, total_uptime):
                         height = bar.get_height()
-                        self.ax_ttt.text(bar.get_x() + bar.get_width() / 2., 1.05*height,
-                                f'{value:.2f}%', ha='center', va='bottom')
-                
+                        self.ax_ttt.text(bar.get_x() + bar.get_width() / 2., 1.05 * height,
+                                         f'{value:.2f}%', ha='center', va='bottom')
+
                 if len(total_produced_map) > 0:
                     labels, total_produced = zip(*total_produced_map.items())
                     bars = self.ax_tp.bar(labels, total_produced, color=colors)
@@ -128,32 +130,39 @@ class Gui(Thread):
                     self.ax_tp.set_ylabel("Total (pieces)")
                     self.ax_tp.set_ylim(bottom=0)
                     self.ax_tp.grid(axis="y")
-                    
+
                     for bar, value in zip(bars, total_produced):
                         height = bar.get_height()
-                        self.ax_tp.text(bar.get_x() + bar.get_width() / 2., 1.05*height,
-                                f'{value:.2f}', ha='center', va='bottom')
-                        
+                        self.ax_tp.text(bar.get_x() + bar.get_width() / 2., 1.05 * height,
+                                        f'{value:.2e}', ha='center', va='bottom')
+
             except ZeroDivisionError as e:
                 logging.error(f"ZeroDivisionError: {e}")
-            
+
             self.ax_stock.set_title("Stock")
             self.ax_stock.set_xlabel("Time (weeks)")
             self.ax_stock.set_ylabel("Stock (pieces)")
             self.ax_stock.set_ylim(bottom=0)
             self.ax_stock.grid()
 
+            # Set scientific notation for the stock axis
+            self.ax_stock.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+            self.ax_stock.yaxis.get_major_formatter().set_scientific(True)
+            self.ax_stock.yaxis.get_major_formatter().set_powerlimits((0, 3))
+
             self.ax_tn.set_xlim([0, 100])
             self.ax_tn.set_title("Tardiness")
-
             self.ax_tn.set_xlabel("% of orders")
             self.ax_tn.set_ylabel("Tardiness (min)")
-            # self.ax_tn.set_yscale('log')
             self.ax_tn.grid()
+
+            # Set scientific notation for the tardiness axis
+            self.ax_tn.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
+            self.ax_tn.yaxis.get_major_formatter().set_scientific(True)
+            self.ax_tn.yaxis.get_major_formatter().set_powerlimits((0, 3))
 
             self.fig.subplots_adjust(hspace=0.5)
             self.fig.legend(handles=lines_tn, loc='upper right')
-            # self.fig.legend(handles=[self.line_rr, self.line_tn], loc='upper right')
             self.canvas.draw()
     
     def start_simulation(self):
