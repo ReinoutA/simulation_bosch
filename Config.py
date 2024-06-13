@@ -25,7 +25,7 @@ LOG_GENERATOR = False
 LOG_DATAFRAMES =  False
 
 # Generator parameters
-ORDER_INTERVAL_MEAN = 1440/8
+ORDER_INTERVAL_MEAN = DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR / 500
 ORDER_INTERVAL_STD = 0
 DEADLINE_MEAN = 2
 DEADLINE_STD = 0.5
@@ -35,7 +35,7 @@ DEADLINE_MIN = 1
 REFRESH_RATE = 10
 SHAPE_PARAM = 4  # Vormparameter (kan worden aangepast)
 SCALE_PARAM = 14  # Schaalparameter (kan worden aangepast)
-SLEEP_FACTOR = 0.1 # Determines silumation speed
+SLEEP_FACTOR = 0.0 # Determines silumation speed
 
 materials = ["FX", "ND", "ND", "NU", "RD", "YL"]
 order_types = list(OrderType)
