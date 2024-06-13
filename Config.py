@@ -2,7 +2,7 @@ from OrderType import OrderType
 from Configuration import Configuration
 from Method import *
 from Schedulers.FCFS import FCFS
-from Schedulers.FCFS_better import FCFS_better
+from Schedulers.FCFSO import FCFSO
 from Schedulers.SJF import SJF
 from Schedulers.HRRN import HRRN
 from Schedulers.PS import PS

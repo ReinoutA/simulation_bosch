@@ -1,8 +1,8 @@
 from Method import *
 
-class FCFS_better(Method):
+class FCFSO(Method):
     def __init__(self):
-        super().__init__("FCFS_better")
+        super().__init__("FCFSO")
         
     def schedule_next(self, machine):
         if machine.last_order_type != 0:
