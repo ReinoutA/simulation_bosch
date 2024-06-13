@@ -113,28 +113,31 @@ class Gui(Thread):
                 if len(total_uptime_map) > 0:
                     labels, total_uptime = zip(*total_uptime_map.items())
                     bars = self.ax_ttt.bar(labels, total_uptime, color=colors)
-                    self.ax_ttt.set_title("Uptime")
+                    self.ax_ttt.set_title("Uptime", pad=20)
                     self.ax_ttt.set_ylabel("Uptime (%)")
                     self.ax_ttt.set_ylim(bottom=0)
                     self.ax_ttt.grid(axis="y")
-
+                    
+                    max_height = max([bar.get_height() for bar in bars])
                     for bar, value in zip(bars, total_uptime):
-                        height = bar.get_height()
-                        self.ax_ttt.text(bar.get_x() + bar.get_width() / 2., 1.05 * height,
-                                         f'{value:.2f}%', ha='center', va='bottom')
+                        self.ax_ttt.text(bar.get_x() + bar.get_width() / 2., max_height + 0.05 * max_height,
+                                        f'{value:.2f}%', ha='center', va='bottom', fontsize=8)
 
                 if len(total_produced_map) > 0:
                     labels, total_produced = zip(*total_produced_map.items())
                     bars = self.ax_tp.bar(labels, total_produced, color=colors)
-                    self.ax_tp.set_title("Total produced")
-                    self.ax_tp.set_ylabel("Total (pieces)")
+                    self.ax_tp.set_title("Total produced", pad=20)
+                    self.ax_tp.set_ylabel("Total produced pieces")
                     self.ax_tp.set_ylim(bottom=0)
                     self.ax_tp.grid(axis="y")
-
+                    self.ax_tp.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+                    self.ax_tp.get_yaxis().get_offset_text().set_position((-0.1,0))
+                    self.ax_tp.get_yaxis().get_offset_text().set_ha('left')
+                    
+                    max_height = max([bar.get_height() for bar in bars])
                     for bar, value in zip(bars, total_produced):
-                        height = bar.get_height()
-                        self.ax_tp.text(bar.get_x() + bar.get_width() / 2., 1.05 * height,
-                                        f'{value:.2e}', ha='center', va='bottom')
+                        self.ax_tp.text(bar.get_x() + bar.get_width() / 2., max_height + 0.05 * max_height,
+                                        f'{value:.2e}', ha='center', va='bottom', fontsize=8)
 
             except ZeroDivisionError as e:
                 logging.error(f"ZeroDivisionError: {e}")
