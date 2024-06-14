@@ -2,6 +2,10 @@
 
 This project is a simulation of three extrusion lines in the Bossch-factory in Tienen. We consider different scheduling algorithms and provide a simple framework in which new algorithms can be included.
 
+Authors:
+Brecht Van de Sijpe
+Reinout Annaert
+
 ## Adding new algorithms
 
 New algorithms can be added by inheriting the Method-class, located in Method.py . The FCFS examples shows us how:
@@ -50,3 +54,7 @@ Comment: in your case you replace the "FCFS" in this line with the name of your 
 ## Setting config parameters
 
 In Config.py all parameters can be changed. These include logging paramters, of which most logs can be found in the log.txt file. Logging of the queues is, when enabled, provided in the terminal.
+
+## Model
+
+Each scheduling-algorithm gets the same orders from the OrderGenerator, this is done so the algorithms can be compared in a fair way based on the same input. A diagram of the framework can be found in "Diagram.svg".
