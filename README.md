@@ -3,7 +3,7 @@
 This project is a simulation of three extrusion lines in the Bossch-factory in Tienen. We consider different scheduling algorithms and provide a simple framework in which new algorithms can be included.
 
 Authors:
-Brecht Van de Sijpe
+Brecht Van de Sijpe,
 Reinout Annaert
 
 ## Adding new algorithms
