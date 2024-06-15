@@ -6,6 +6,15 @@ Authors:
 Brecht Van de Sijpe,
 Reinout Annaert
 
+## Setup
+Our setup:
+
+Python version: 3.12.2
+
+Required packages: logging, numpy, salabim, pandas, threading, tkinter, greenlet, os, glob, inspect, time, random
+
+To setup the project we would recomment the ussage of anaconda in order.
+
 ## Adding new algorithms
 
 New algorithms can be added by inheriting the Method-class, located in Method.py . The FCFS examples shows us how:
