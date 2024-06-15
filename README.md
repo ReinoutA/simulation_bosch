@@ -76,3 +76,11 @@ In Config.py all parameters can be changed. These include logging paramters, of 
 ## Model
 
 Each scheduling-algorithm gets the same orders from the OrderGenerator, this is done so the algorithms can be compared in a fair way based on the same input. A diagram of the framework can be found in "Overview.png".
+
+## Folders
+
+Data folder -> csv files from which the model can read and sample new values.
+
+data-analysis -> the full data analysis we performed
+
+.idea, ```__pycache__``` -> Pycharm metadata, not specificly necessary (probably not even present in the folder)
