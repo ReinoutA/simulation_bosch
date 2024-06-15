@@ -84,3 +84,7 @@ Data folder -> csv files from which the model can read and sample new values.
 data-analysis -> the full data analysis we performed
 
 .idea, ```__pycache__``` -> Pycharm metadata, not specificly necessary (probably not even present in the folder)
+
+GUI-styling -> not important, used for the styling of graphs in the GUI before inserting them into the GUI as a final version
+
+Schedulers -> Folder that contains all the scheduling algorithms
