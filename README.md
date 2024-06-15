@@ -3,8 +3,17 @@
 This project is a simulation of three extrusion lines in the Bossch-factory in Tienen. We consider different scheduling algorithms and provide a simple framework in which new algorithms can be included.
 
 Authors:
+
 Brecht Van de Sijpe,
+
 Reinout Annaert
+
+
+Contact information in case of questions:
+
+Brecht Van de Sijpe: brecht.van.de.sijpe@gmail.com
+
+Reinout Annaert: reinout.annaert@gmail.com
 
 ## Setup
 Our setup:
@@ -13,7 +22,7 @@ Python version: 3.12.2
 
 Required packages: logging, numpy, salabim, pandas, threading, tkinter, greenlet, os, glob, inspect, time, random
 
-To setup the project we would recomment the ussage of anaconda in order.
+To setup the project we would recomment the ussage of anaconda in order to use the libraries.
 
 ## Adding new algorithms
 
@@ -66,4 +75,4 @@ In Config.py all parameters can be changed. These include logging paramters, of 
 
 ## Model
 
-Each scheduling-algorithm gets the same orders from the OrderGenerator, this is done so the algorithms can be compared in a fair way based on the same input. A diagram of the framework can be found in "Diagram.svg".
+Each scheduling-algorithm gets the same orders from the OrderGenerator, this is done so the algorithms can be compared in a fair way based on the same input. A diagram of the framework can be found in "Overview.png".
