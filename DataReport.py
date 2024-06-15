@@ -5,6 +5,8 @@ import numpy as np
 from Config import *
 import Config
 
+# This class is meant for data analysis purposes. Machines append to this and later the GUI asks for the data to draw the graphs
+
 class DataReport:
     def __init__(self, name):
         self.df = pd.DataFrame(columns=["Order", "Starting time", "End time", "Execution time", "Deadline"])

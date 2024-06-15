@@ -24,7 +24,10 @@ class OrderGenerator(sim.Component):
     def process(self):
         total_hold_time = 0
         while Config.simulation_running and Config.gui_running:
+            # Parameters for the new order
             random_order_type = random.choices(Config.order_types, weights=Config.order_type_weights, k=1)[0]
+            
+            # Sample the ordersize from the distribution
             material = str(random_order_type).replace("OrderType.", "").split("_")[0]
             sampled_row = self.total_produced[material].sample(n=1)
             size = sampled_row["total produced"].values[0]
@@ -39,6 +42,7 @@ class OrderGenerator(sim.Component):
             #logging.info(total_hold_time)
             self.hold(hold_time)
             
+            # Parameters for the new order
             start_time = int(self.env.now())
             deadline = int(start_time + min(DEADLINE_MIN, sim.Normal(DEADLINE_MEAN, DEADLINE_STD).sample()) * DAYS_IN_WEEK * HOURS_IN_DAY * MINUTES_IN_HOUR)
             transition_time = sim.Gamma(Config.SHAPE_PARAM, Config.SCALE_PARAM).sample()

@@ -1,7 +1,11 @@
 import pandas as pd
 import threading
+from Config import *
+import Config
 
-line_numbers = [103, 104, 105]
+# This class contains logic for the machines to determine parameters like runtime and error rate. The machine calls the
+# get_sample method to get a sample of the runtime and error rate for a specific order type. This is done by sampling from the dataframe
+# that is loaded in the constructor. The machine also has a mutex lock to prevent. The historic samples are found in the Data folder.
 
 class Configuration:
     num_configurations = 0
@@ -13,7 +17,7 @@ class Configuration:
         self.priority_list = priority_list
         self.dfs = {}
         for type in self.can_do_list:
-            self.dfs[type] = pd.read_csv(f"Data/{line_numbers[Configuration.num_configurations - 1]}_{str(type).replace('OrderType.', '')}.csv")
+            self.dfs[type] = pd.read_csv(f"Data/{Config.line_numbers[Configuration.num_configurations - 1]}_{str(type).replace('OrderType.', '')}.csv")
         self.mutex = threading.Lock()
         
     def get_sample(self, order_type):

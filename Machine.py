@@ -29,6 +29,7 @@ class Machine(sim.Component):
                             
             order, num_processed = self.method.schedule_next(self)
             
+            # It is possible that data races occur (even when using mutexes). In order to prevent this we check if the order is not None
             if order is not None:
                 if order.size == 0:
                     print("Order size is 0, skipping")
@@ -44,6 +45,8 @@ class Machine(sim.Component):
                         self.total_transition_time += transition_time
                         self.hold(transition_time)
 
+                    # Sample the runtim and error_rate. In order to be consequent in later stages we set this as a current parameter in
+                    # the machine, which we can fetch from outside
                     self.runtime, self.error_rate = self.configuration.get_sample(order.type)
 
                     # self.runtime = 40
@@ -76,19 +79,24 @@ class Machine(sim.Component):
             else:
                 self.passivate()
                 
+    # Get the transition time for switching to a new order
     def get_transition_time(self, order):
         if self.last_order_type == order.type:
             return 0
         return self.configuration.transitions.get((self.last_order_type, order.type), 0).sample()
     
+    # Get the sampled runtime of the new order
     def get_runtime(self):
         return self.runtime
     
+    # Fetch the priority list
     def get_priority_list(self):
         return self.configuration.priority_list
     
+    # Get the sampled error rate of the new order
     def get_error_rate(self):
         return self.error_rate
     
+    # Calculate the execution time of the presented order
     def get_execution_time(self, order):
         return order.size / self.runtime

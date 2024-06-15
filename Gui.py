@@ -18,6 +18,9 @@ from Config import *
 import Config
 from Simulation import Simulation
 import matplotlib.ticker as ticker
+
+# This contains all of the Graphical User Interface (GUI) code. It is responsible for drawing the graphs and handling the user input.
+
 class Gui(Thread):
     def __init__(self):
         super().__init__()

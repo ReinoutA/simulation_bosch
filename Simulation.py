@@ -7,6 +7,12 @@ from OrderGenerator import OrderGenerator
 from DataReport import DataReport
 from threading import Thread
 
+# This is the class that contains all the logic to do the simulation of all the algorithms.
+# Since we are using salabim, we can only create one environment called env. In order to run multiple scheduling situations
+# at the same time we use a trick. For each scheduling situation we create a global queue and a list of machines. Each queue
+# is connected to the machines in the list. We then create a OrderGenerator that generates orders for all the queues and machines.
+# Each queue receives the same orders from the OrderGenerator.
+
 class Simulation(Thread):
     def __init__(self, reports):
         super().__init__()
@@ -39,19 +45,8 @@ class Simulation(Thread):
             
         generator = OrderGenerator(global_queues, all_machines, env, self.reports)
         generator.activate()
-        
-        # class AdjustSpeedProcess(sim.Component):
-        #     def process(self):
-        #         while True:
-        #             self.hold(50)
-        #             env.speed(2)  # Increase the speed
-        #             self.hold(50)
-        #             env.speed(0.5)  # Decrease the speed
 
-        # # Don't forget to create an instance of your components and start them
-        # AdjustSpeedProcess()
-
-        env.run()
+        env.run()   # Start the simulation
 
         if LOG_QUEUES:
             for global_queue in global_queues:
